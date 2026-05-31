@@ -72,7 +72,39 @@
             updateStatCards(data);
             updateTopProducts(data.top_products || []);
             updateActivityChart(data.hourly_data || []);
+            updateConversionProof(data.ab_results || null);
         });
+    }
+
+    function updateConversionProof(ab) {
+        var card = document.querySelector('.splive-proof-card');
+        if (!card) return;
+
+        if (!ab || !ab.enabled) {
+            card.style.display = 'none';
+            return;
+        }
+
+        card.style.display = '';
+
+        setElementText('.splive-proof-lift-value', (ab.lift_percent > 0 ? '+' : '') + ab.lift_percent + '%');
+        setElementText('.splive-proof-revenue-value', formatNumber(ab.extra_revenue));
+        setElementText('.splive-proof-treatment-cr', ab.treatment.conversion_rate + '%');
+        setElementText('.splive-proof-control-cr', ab.control.conversion_rate + '%');
+        setElementText('.splive-proof-treatment-meta', ab.treatment.conversions + ' / ' + ab.treatment.visitors + ' visitors');
+        setElementText('.splive-proof-control-meta', ab.control.conversions + ' / ' + ab.control.visitors + ' visitors');
+
+        var note = document.querySelector('.splive-proof-note');
+        if (note) {
+            if (ab.has_enough_data) {
+                note.textContent = 'Based on ' + formatNumber(ab.total_visitors) + ' visitors, social proof generated about ' +
+                    ab.extra_conversions + ' extra orders.';
+                note.className = 'splive-proof-note';
+            } else {
+                note.textContent = 'Collecting data… results become statistically meaningful after ~30+ visitors in each group with several orders.';
+                note.className = 'splive-proof-note splive-proof-note-pending';
+            }
+        }
     }
 
     function updateStatCards(data) {

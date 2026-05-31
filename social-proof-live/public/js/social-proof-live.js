@@ -195,11 +195,51 @@
             stopCountdown();
         }
 
+        // Update demand score meter.
+        if (config.enableDemand && data.demand && data.demand.score) {
+            var demandEl = widget.querySelector('.splive-demand');
+            if (demandEl) {
+                updateDemand(demandEl, data.demand);
+                hasContent = true;
+            }
+        } else {
+            var dEl = widget.querySelector('.splive-demand');
+            if (dEl) { dEl.style.display = 'none'; }
+        }
+
         if (hasContent) {
             showWidget(widget);
             fireImpression(widget);
         } else {
             hideWidget(widget);
+        }
+    }
+
+    /**
+     * Update the demand score meter (animated fill + label + flame intensity).
+     */
+    function updateDemand(el, demand) {
+        var labelEl = el.querySelector('.splive-demand-label');
+        var scoreEl = el.querySelector('.splive-demand-score');
+        var fillEl = el.querySelector('.splive-demand-fill');
+
+        if (labelEl) { labelEl.textContent = demand.label; }
+        if (scoreEl) { scoreEl.textContent = demand.score + '%'; }
+        if (fillEl) {
+            // Animate fill width on next frame.
+            requestAnimationFrame(function () {
+                fillEl.style.width = demand.score + '%';
+            });
+        }
+
+        // Level class drives the color (hot/high/trending/rising).
+        el.className = el.className.replace(/splive-level-\w+/g, '');
+        el.classList.add('splive-level-' + (demand.level || 'rising'));
+
+        if (el.style.display === 'none') {
+            el.style.display = '';
+            el.classList.add('splive-entering');
+            setTimeout(function () { el.classList.remove('splive-entering'); }, 400);
         }
     }
 

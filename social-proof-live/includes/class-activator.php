@@ -97,9 +97,25 @@ class Activator {
             KEY idx_product_id (product_id)
         ) {$charset_collate};";
 
+        $experiments_table = $wpdb->prefix . 'splive_experiments';
+
+        $sql_experiments = "CREATE TABLE {$experiments_table} (
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            stat_date DATE NOT NULL,
+            variant VARCHAR(12) NOT NULL,
+            visitors INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            conversions INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            revenue DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY date_variant (stat_date, variant),
+            KEY idx_stat_date (stat_date)
+        ) {$charset_collate};";
+
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $sql_sessions );
         dbDelta( $sql_stats );
+        dbDelta( $sql_experiments );
     }
 
     /**

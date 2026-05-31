@@ -52,6 +52,39 @@ $show_onboarding = get_option( 'splive_show_onboarding', false );
         <div class="splive-chart-container"></div>
     </div>
 
+    <!-- Conversion Proof (A/B Test) -->
+    <div class="splive-card splive-proof-card" style="display:none;">
+        <div class="splive-card-header">
+            <h2 class="splive-card-title">🧪 <?php esc_html_e( 'Conversion Proof', 'social-proof-live' ); ?></h2>
+            <span class="splive-proof-badge"><?php esc_html_e( 'Measured, not guessed', 'social-proof-live' ); ?></span>
+        </div>
+        <div class="splive-proof-body">
+            <div class="splive-proof-hero">
+                <div class="splive-proof-lift">
+                    <span class="splive-proof-lift-value">—</span>
+                    <span class="splive-proof-lift-label"><?php esc_html_e( 'Conversion Lift', 'social-proof-live' ); ?></span>
+                </div>
+                <div class="splive-proof-revenue">
+                    <span class="splive-proof-revenue-value">—</span>
+                    <span class="splive-proof-revenue-label"><?php esc_html_e( 'Extra Revenue Generated', 'social-proof-live' ); ?></span>
+                </div>
+            </div>
+            <div class="splive-proof-split">
+                <div class="splive-proof-col">
+                    <div class="splive-proof-col-title"><?php esc_html_e( 'With Social Proof', 'social-proof-live' ); ?></div>
+                    <div class="splive-proof-cr splive-proof-treatment-cr">—</div>
+                    <div class="splive-proof-meta splive-proof-treatment-meta">—</div>
+                </div>
+                <div class="splive-proof-col">
+                    <div class="splive-proof-col-title"><?php esc_html_e( 'Control (no proof)', 'social-proof-live' ); ?></div>
+                    <div class="splive-proof-cr splive-proof-control-cr">—</div>
+                    <div class="splive-proof-meta splive-proof-control-meta">—</div>
+                </div>
+            </div>
+            <p class="splive-proof-note"></p>
+        </div>
+    </div>
+
     <!-- Top Products -->
     <div class="splive-card">
         <div class="splive-card-header">

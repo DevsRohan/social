@@ -170,14 +170,18 @@ global $wpdb;
 
 $splive_sessions_table = $wpdb->prefix . 'splive_sessions';
 $splive_stats_table    = $wpdb->prefix . 'splive_stats';
+$splive_exp_table      = $wpdb->prefix . 'splive_experiments';
 
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 $sessions_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $splive_sessions_table ) ) === $splive_sessions_table );
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 $stats_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $splive_stats_table ) ) === $splive_stats_table );
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+$exp_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $splive_exp_table ) ) === $splive_exp_table );
 
 splive_check( 'Sessions table exists', $sessions_exists ? 'PASS' : 'FAIL', $splive_sessions_table );
 splive_check( 'Stats table exists', $stats_exists ? 'PASS' : 'FAIL', $splive_stats_table );
+splive_check( 'Experiments table exists (v1.2.0)', $exp_exists ? 'PASS' : 'FAIL', $splive_exp_table . ( $exp_exists ? '' : ' — re-activate plugin to migrate' ) );
 
 if ( $sessions_exists ) {
     // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -294,6 +298,8 @@ $classes = array(
     'SocialProofLive\\Core\\Data_Aggregator',
     'SocialProofLive\\Core\\Conversion_Tracker',
     'SocialProofLive\\Core\\Display_Rules',
+    'SocialProofLive\\Core\\AB_Test',
+    'SocialProofLive\\Core\\Demand_Score',
     'SocialProofLive\\Notifications\\Sales_Notifications',
     'SocialProofLive\\Api\\Heartbeat_Endpoint',
     'SocialProofLive\\Api\\Notifications_Endpoint',

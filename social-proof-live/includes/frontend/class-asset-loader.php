@@ -131,6 +131,7 @@ class Asset_Loader {
             'enableCountdown'  => (bool) $this->settings['enable_countdown'],
             'textStock'        => $this->settings['text_stock'],
             'textCountdown'    => $this->settings['text_countdown'],
+            'enableDemand'     => (bool) $this->settings['enable_demand_score'],
             'enableConversionTracking' => (bool) $this->settings['enable_conversion_tracking'],
         ) );
     }

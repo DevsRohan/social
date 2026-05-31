@@ -101,6 +101,7 @@ class Admin_Endpoint extends Rest_Controller {
             'avg_concurrent'  => $avg_concurrent,
             'top_products'    => $top_products,
             'hourly_data'     => $hourly_data,
+            'ab_results'      => $this->compute_ab_results( gmdate( 'Y-m-d', strtotime( '-30 days' ) ), gmdate( 'Y-m-d' ) ),
             'cache_driver'    => Cache_Manager::get_instance()->get_driver_type(),
             'plugin_version'  => SPLIVE_VERSION,
         );
@@ -140,6 +141,7 @@ class Admin_Endpoint extends Rest_Controller {
             'summary'         => $summary,
             'conversion_rate' => $conversion_rate,
             'cart_rate'       => $cart_rate,
+            'ab_results'      => $this->compute_ab_results( $start_date, $end_date ),
             'hourly_data'     => $stats_repo->get_stats_range( 0, $start_date, $end_date ),
             'top_products'    => $stats_repo->get_top_products_by_sessions( 20, $start_date, $end_date ),
             'start_date'      => $start_date,
@@ -147,6 +149,56 @@ class Admin_Endpoint extends Rest_Controller {
         );
 
         return $this->success( $response );
+    }
+
+    /**
+     * Compute A/B test (Conversion Proof) results for a date range.
+     *
+     * Calculates conversion rate per variant, relative lift, and the extra
+     * conversions + revenue attributable to showing social proof.
+     *
+     * @param string $start_date Start date.
+     * @param string $end_date   End date.
+     * @return array
+     */
+    private function compute_ab_results( $start_date, $end_date ) {
+        $repo    = new Stats_Repository();
+        $summary = $repo->get_ab_summary( $start_date, $end_date );
+
+        $c = $summary['control'];
+        $t = $summary['treatment'];
+
+        $c_cr = $c['visitors'] > 0 ? ( $c['conversions'] / $c['visitors'] ) : 0;
+        $t_cr = $t['visitors'] > 0 ? ( $t['conversions'] / $t['visitors'] ) : 0;
+
+        $lift = $c_cr > 0 ? ( ( $t_cr - $c_cr ) / $c_cr ) * 100 : 0;
+
+        // Extra conversions attributable to social proof among treated visitors.
+        $extra_conversions = ( $t_cr - $c_cr ) * $t['visitors'];
+        $aov               = $t['conversions'] > 0 ? ( $t['revenue'] / $t['conversions'] ) : 0;
+        $extra_revenue     = max( 0, $extra_conversions ) * $aov;
+
+        $total_visitors = (int) ( $c['visitors'] + $t['visitors'] );
+        $has_data       = ( $c['visitors'] >= 30 && $t['visitors'] >= 30 && ( $c['conversions'] + $t['conversions'] ) >= 5 );
+
+        return array(
+            'enabled'           => ! empty( $this->settings['enable_ab_test'] ),
+            'has_enough_data'   => $has_data,
+            'total_visitors'    => $total_visitors,
+            'control'           => array(
+                'visitors'        => (int) $c['visitors'],
+                'conversions'     => (int) $c['conversions'],
+                'conversion_rate' => round( $c_cr * 100, 2 ),
+            ),
+            'treatment'         => array(
+                'visitors'        => (int) $t['visitors'],
+                'conversions'     => (int) $t['conversions'],
+                'conversion_rate' => round( $t_cr * 100, 2 ),
+            ),
+            'lift_percent'      => round( $lift, 1 ),
+            'extra_conversions' => (int) round( max( 0, $extra_conversions ) ),
+            'extra_revenue'     => round( max( 0, $extra_revenue ), 2 ),
+        );
     }
 
     /**
@@ -220,6 +272,13 @@ class Admin_Endpoint extends Rest_Controller {
         $sanitized['badge_min_visitors']  = max( 1, min( 1000, $sanitized['badge_min_visitors'] ) );
         $sanitized['rules_hour_start']    = max( 0, min( 23, $sanitized['rules_hour_start'] ) );
         $sanitized['rules_hour_end']      = max( 0, min( 23, $sanitized['rules_hour_end'] ) );
+
+        // USP ranges.
+        $sanitized['demand_viewers_cap']  = max( 1, min( 1000, $sanitized['demand_viewers_cap'] ) );
+        $sanitized['demand_cart_cap']     = max( 1, min( 1000, $sanitized['demand_cart_cap'] ) );
+        $sanitized['demand_velocity_cap'] = max( 1, min( 1000, $sanitized['demand_velocity_cap'] ) );
+        $sanitized['demand_min_show']     = max( 0, min( 100, $sanitized['demand_min_show'] ) );
+        $sanitized['ab_control_percent']  = max( 5, min( 50, $sanitized['ab_control_percent'] ) );
 
         // Validate color.
         if ( ! preg_match( '/^#[a-fA-F0-9]{6}$/', $sanitized['accent_color'] ) ) {

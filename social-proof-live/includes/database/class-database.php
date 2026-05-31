@@ -96,4 +96,14 @@ class Database {
         global $wpdb;
         return $wpdb->prefix . 'splive_stats';
     }
+
+    /**
+     * Get experiments (A/B test) table name.
+     *
+     * @return string
+     */
+    public static function get_experiments_table() {
+        global $wpdb;
+        return $wpdb->prefix . 'splive_experiments';
+    }
 }

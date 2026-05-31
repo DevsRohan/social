@@ -115,6 +115,18 @@ class Widget_Renderer {
             return;
         }
 
+        // A/B Test — assign variant, count the visitor, and hide social proof
+        // for the control group so we can measure the real conversion lift.
+        $ab_test = new \SocialProofLive\Core\AB_Test( $this->settings );
+        if ( $ab_test->is_enabled() ) {
+            $variant = $ab_test->get_variant();
+            $ab_test->maybe_count_visitor( $variant );
+
+            if ( 'control' === $variant ) {
+                return; // Control group sees no social proof.
+            }
+        }
+
         $this->output_widget_html( $product_id );
     }
 
@@ -210,6 +222,18 @@ class Widget_Renderer {
             $html .= '<div class="splive-line splive-countdown" data-type="countdown" style="display:none;">';
             $html .= '<span class="splive-icon">' . esc_html( $this->settings['icon_countdown'] ) . '</span>';
             $html .= '<span class="splive-text"></span>';
+            $html .= '</div>';
+        }
+
+        // Demand Score meter.
+        if ( ! empty( $this->settings['enable_demand_score'] ) ) {
+            $html .= '<div class="splive-demand" data-type="demand" style="display:none;">';
+            $html .= '<div class="splive-demand-head">';
+            $html .= '<span class="splive-demand-flame">' . esc_html( $this->settings['icon_demand'] ) . '</span>';
+            $html .= '<span class="splive-demand-label"></span>';
+            $html .= '<span class="splive-demand-score"></span>';
+            $html .= '</div>';
+            $html .= '<div class="splive-demand-bar"><div class="splive-demand-fill"></div></div>';
             $html .= '</div>';
         }
 

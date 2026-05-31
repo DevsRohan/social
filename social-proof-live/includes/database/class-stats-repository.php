@@ -303,4 +303,139 @@ class Stats_Repository {
 
         return $results ? $results : array();
     }
+
+    /**
+     * Record a visitor for an A/B test variant (idempotent per call).
+     *
+     * @param string $variant 'control' or 'treatment'.
+     * @return bool
+     */
+    public function record_ab_visitor( $variant ) {
+        return $this->increment_experiment( $variant, 'visitors', 1, 0 );
+    }
+
+    /**
+     * Record a conversion (and revenue) for an A/B test variant.
+     *
+     * @param string $variant 'control' or 'treatment'.
+     * @param float  $revenue Order revenue to attribute.
+     * @return bool
+     */
+    public function record_ab_conversion( $variant, $revenue = 0 ) {
+        return $this->increment_experiment( $variant, 'conversions', 1, (float) $revenue );
+    }
+
+    /**
+     * Increment an experiment counter for the current day.
+     *
+     * @param string $variant Variant key.
+     * @param string $metric  'visitors' or 'conversions'.
+     * @param int    $amount  Amount to add to the metric.
+     * @param float  $revenue Revenue to add.
+     * @return bool
+     */
+    private function increment_experiment( $variant, $metric, $amount, $revenue ) {
+        if ( ! in_array( $variant, array( 'control', 'treatment' ), true ) ) {
+            return false;
+        }
+        if ( ! in_array( $metric, array( 'visitors', 'conversions' ), true ) ) {
+            return false;
+        }
+
+        global $wpdb;
+
+        $table  = Database::get_experiments_table();
+        $date   = gmdate( 'Y-m-d' );
+        $amount = absint( $amount );
+
+        // Metric column is whitelisted above, safe to interpolate.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $result = $wpdb->query(
+            $wpdb->prepare(
+                "INSERT INTO {$table} (stat_date, variant, {$metric}, revenue)
+                VALUES (%s, %s, %d, %f)
+                ON DUPLICATE KEY UPDATE {$metric} = {$metric} + VALUES({$metric}), revenue = revenue + VALUES(revenue)",
+                $date,
+                $variant,
+                $amount,
+                $revenue
+            )
+        );
+
+        return false !== $result;
+    }
+
+    /**
+     * Get aggregated A/B test results for a date range.
+     *
+     * @param string $start_date Start date (Y-m-d).
+     * @param string $end_date   End date (Y-m-d).
+     * @return array Keyed by variant with visitors, conversions, revenue.
+     */
+    public function get_ab_summary( $start_date = '', $end_date = '' ) {
+        global $wpdb;
+
+        $table = Database::get_experiments_table();
+
+        if ( empty( $start_date ) ) {
+            $start_date = gmdate( 'Y-m-d', strtotime( '-30 days' ) );
+        }
+        if ( empty( $end_date ) ) {
+            $end_date = gmdate( 'Y-m-d' );
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT variant,
+                    SUM(visitors) as visitors,
+                    SUM(conversions) as conversions,
+                    SUM(revenue) as revenue
+                FROM {$table}
+                WHERE stat_date BETWEEN %s AND %s
+                GROUP BY variant",
+                $start_date,
+                $end_date
+            ),
+            ARRAY_A
+        );
+
+        $summary = array(
+            'control'   => array( 'visitors' => 0, 'conversions' => 0, 'revenue' => 0.0 ),
+            'treatment' => array( 'visitors' => 0, 'conversions' => 0, 'revenue' => 0.0 ),
+        );
+
+        if ( $rows ) {
+            foreach ( $rows as $row ) {
+                $v = $row['variant'];
+                if ( isset( $summary[ $v ] ) ) {
+                    $summary[ $v ]['visitors']    = (int) $row['visitors'];
+                    $summary[ $v ]['conversions'] = (int) $row['conversions'];
+                    $summary[ $v ]['revenue']     = (float) $row['revenue'];
+                }
+            }
+        }
+
+        return $summary;
+    }
+
+    /**
+     * Purge old experiment rows beyond the retention period.
+     *
+     * @param int $days Days to keep.
+     * @return int Rows deleted.
+     */
+    public function purge_old_experiments( $days = 90 ) {
+        global $wpdb;
+
+        $table     = Database::get_experiments_table();
+        $threshold = gmdate( 'Y-m-d', strtotime( "-{$days} days" ) );
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $deleted = $wpdb->query(
+            $wpdb->prepare( "DELETE FROM {$table} WHERE stat_date < %s", $threshold )
+        );
+
+        return absint( $deleted );
+    }
 }

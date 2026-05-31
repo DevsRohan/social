@@ -41,13 +41,23 @@ class Conversion_Tracker {
      * @return void
      */
     public function init() {
-        if ( empty( $this->settings['enable_conversion_tracking'] ) ) {
-            return;
+        $conversion_on = ! empty( $this->settings['enable_conversion_tracking'] );
+        $ab_on         = ! empty( $this->settings['enable_ab_test'] );
+
+        if ( $conversion_on ) {
+            add_action( 'woocommerce_add_to_cart', array( $this, 'on_add_to_cart' ), 10, 6 );
         }
 
-        add_action( 'woocommerce_add_to_cart', array( $this, 'on_add_to_cart' ), 10, 6 );
-        add_action( 'woocommerce_payment_complete', array( $this, 'on_order_paid' ) );
-        add_action( 'woocommerce_order_status_completed', array( $this, 'on_order_paid' ) );
+        // A/B test — persist the visitor's variant onto the order at checkout.
+        if ( $ab_on ) {
+            add_action( 'woocommerce_checkout_create_order', array( $this, 'store_variant_on_order' ), 10, 2 );
+        }
+
+        // Order paid/completed — record purchases (stats) and A/B conversions.
+        if ( $conversion_on || $ab_on ) {
+            add_action( 'woocommerce_payment_complete', array( $this, 'on_order_paid' ) );
+            add_action( 'woocommerce_order_status_completed', array( $this, 'on_order_paid' ) );
+        }
     }
 
     /**
@@ -70,6 +80,24 @@ class Conversion_Tracker {
     }
 
     /**
+     * Store the visitor's A/B variant on the order at checkout.
+     *
+     * @param \WC_Order $order Order being created.
+     * @param array     $data  Posted checkout data.
+     * @return void
+     */
+    public function store_variant_on_order( $order, $data ) {
+        if ( ! function_exists( 'WC' ) || ! WC()->session ) {
+            return;
+        }
+
+        $variant = WC()->session->get( 'splive_variant' );
+        if ( 'control' === $variant || 'treatment' === $variant ) {
+            $order->update_meta_data( '_splive_variant', $variant );
+        }
+    }
+
+    /**
      * Record purchases when an order is paid/completed.
      *
      * Guards against double counting using order meta.
@@ -88,13 +116,24 @@ class Conversion_Tracker {
             return;
         }
 
-        $stats = new Stats_Repository();
+        // Per-product purchase stats.
+        if ( ! empty( $this->settings['enable_conversion_tracking'] ) ) {
+            $stats = new Stats_Repository();
+            foreach ( $order->get_items() as $item ) {
+                $product_id = $item->get_product_id();
+                if ( $product_id ) {
+                    $qty = max( 1, (int) $item->get_quantity() );
+                    $stats->increment_metric( $product_id, 'purchases', $qty );
+                }
+            }
+        }
 
-        foreach ( $order->get_items() as $item ) {
-            $product_id = $item->get_product_id();
-            if ( $product_id ) {
-                $qty = max( 1, (int) $item->get_quantity() );
-                $stats->increment_metric( $product_id, 'purchases', $qty );
+        // A/B test conversion attribution.
+        if ( ! empty( $this->settings['enable_ab_test'] ) ) {
+            $variant = $order->get_meta( '_splive_variant' );
+            if ( 'control' === $variant || 'treatment' === $variant ) {
+                $repo = new Stats_Repository();
+                $repo->record_ab_conversion( $variant, (float) $order->get_total() );
             }
         }
 

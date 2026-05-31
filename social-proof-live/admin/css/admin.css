@@ -850,3 +850,126 @@
 .splive-gap-8 { gap: 8px; }
 .splive-gap-12 { gap: 12px; }
 .splive-gap-16 { gap: 16px; }
+
+
+/* ==========================================================================
+   Conversion Proof Card (USP)
+   ========================================================================== */
+
+.splive-proof-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--splive-success);
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 20px;
+}
+
+.splive-proof-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.splive-proof-lift,
+.splive-proof-revenue {
+    padding: 20px;
+    border-radius: var(--splive-radius-lg);
+    text-align: center;
+}
+
+.splive-proof-lift {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.12), rgba(255, 107, 53, 0.04));
+    border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.splive-proof-revenue {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.04));
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.splive-proof-lift-value,
+.splive-proof-revenue-value {
+    display: block;
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.splive-proof-lift-value {
+    color: var(--splive-accent);
+}
+
+.splive-proof-revenue-value {
+    color: var(--splive-success);
+}
+
+.splive-proof-revenue-value::before {
+    content: '₹';
+    font-size: 22px;
+    vertical-align: top;
+    margin-right: 2px;
+}
+
+.splive-proof-lift-label,
+.splive-proof-revenue-label {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--splive-text-secondary);
+}
+
+.splive-proof-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.splive-proof-col {
+    padding: 16px;
+    border: 1px solid var(--splive-border);
+    border-radius: var(--splive-radius-md);
+    text-align: center;
+}
+
+.splive-proof-col-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--splive-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.splive-proof-cr {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--splive-text-primary);
+    margin: 6px 0 2px;
+}
+
+.splive-proof-meta {
+    font-size: 12px;
+    color: var(--splive-text-tertiary);
+}
+
+.splive-proof-note {
+    margin: 16px 0 0;
+    font-size: 12px;
+    color: var(--splive-text-secondary);
+}
+
+.splive-proof-note-pending {
+    color: var(--splive-warning);
+}
+
+@media (max-width: 600px) {
+    .splive-proof-hero,
+    .splive-proof-split {
+        grid-template-columns: 1fr;
+    }
+}

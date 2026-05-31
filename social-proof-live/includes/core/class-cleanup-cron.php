@@ -108,6 +108,9 @@ class Cleanup_Cron {
         $retention   = isset( $this->settings['stats_retention'] ) ? (int) $this->settings['stats_retention'] : 30;
         $purged_stats = $stats_repo->purge_old_stats( $retention );
 
+        // Purge A/B experiment rows older than 90 days.
+        $stats_repo->purge_old_experiments( 90 );
+
         if ( ! empty( $this->settings['debug_mode'] ) ) {
             error_log( sprintf(
                 '[Social Proof LIVE] Daily maintenance: %d sessions purged, %d stats rows purged.',

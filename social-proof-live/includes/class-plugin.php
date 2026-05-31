@@ -268,6 +268,18 @@ class Plugin {
 
             // --- PREMIUM: Conversion Tracking ---
             'enable_conversion_tracking' => true,
+
+            // --- USP: Live Demand Score Meter ---
+            'enable_demand_score'    => true,
+            'icon_demand'            => '🔥',
+            'demand_viewers_cap'     => 20,
+            'demand_cart_cap'        => 10,
+            'demand_velocity_cap'    => 10,
+            'demand_min_show'        => 20,
+
+            // --- USP: A/B Conversion Proof ---
+            'enable_ab_test'         => false,
+            'ab_control_percent'     => 15,
         );
     }
 }

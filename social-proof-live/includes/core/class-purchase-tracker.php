@@ -269,6 +269,84 @@ class Purchase_Tracker {
     }
 
     /**
+     * Count purchases of a product within the last N hours (sales velocity).
+     *
+     * @param int $product_id Product ID.
+     * @param int $hours      Look-back window in hours.
+     * @return int Number of recent orders containing the product.
+     */
+    public function get_recent_purchase_count( $product_id, $hours = 72 ) {
+        if ( ! function_exists( 'WC' ) ) {
+            return 0;
+        }
+
+        $cache     = Cache_Manager::get_instance();
+        $cache_key = 'velocity_' . $product_id . '_' . $hours;
+        $cached    = $cache->get( $cache_key );
+
+        if ( false !== $cached ) {
+            return (int) $cached;
+        }
+
+        global $wpdb;
+
+        $order_items_table    = $wpdb->prefix . 'woocommerce_order_items';
+        $order_itemmeta_table = $wpdb->prefix . 'woocommerce_order_itemmeta';
+        $threshold            = gmdate( 'Y-m-d H:i:s', time() - ( $hours * HOUR_IN_SECONDS ) );
+        $orders_table         = $wpdb->prefix . 'wc_orders';
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $hpos = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = %s AND table_name = %s",
+                DB_NAME,
+                $orders_table
+            )
+        );
+
+        if ( $hpos ) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $count = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT COUNT(DISTINCT o.id)
+                    FROM {$orders_table} o
+                    INNER JOIN {$order_items_table} oi ON o.id = oi.order_id
+                    INNER JOIN {$order_itemmeta_table} oim ON oi.order_item_id = oim.order_item_id
+                    WHERE o.status IN ('wc-completed', 'wc-processing', 'completed', 'processing')
+                    AND o.type = 'shop_order'
+                    AND o.date_created_gmt >= %s
+                    AND oim.meta_key IN ('_product_id', '_variation_id')
+                    AND oim.meta_value = %s",
+                    $threshold,
+                    $product_id
+                )
+            );
+        } else {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $count = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT COUNT(DISTINCT p.ID)
+                    FROM {$wpdb->posts} p
+                    INNER JOIN {$order_items_table} oi ON p.ID = oi.order_id
+                    INNER JOIN {$order_itemmeta_table} oim ON oi.order_item_id = oim.order_item_id
+                    WHERE p.post_type = 'shop_order'
+                    AND p.post_status IN ('wc-completed', 'wc-processing')
+                    AND p.post_date_gmt >= %s
+                    AND oim.meta_key IN ('_product_id', '_variation_id')
+                    AND oim.meta_value = %s",
+                    $threshold,
+                    $product_id
+                )
+            );
+        }
+
+        $count = absint( $count );
+        $cache->set( $cache_key, $count, 300 );
+
+        return $count;
+    }
+
+    /**
      * Invalidate purchase cache for a product.
      *
      * @param int $product_id Product ID.

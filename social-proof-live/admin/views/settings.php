@@ -26,6 +26,7 @@ $settings = wp_parse_args( $settings, $defaults );
     <!-- Tabs -->
     <div class="splive-tabs">
         <button class="splive-tab-btn active" data-tab="display"><?php esc_html_e( 'Display', 'social-proof-live' ); ?></button>
+        <button class="splive-tab-btn" data-tab="usp">🚀 <?php esc_html_e( 'USP / Pro', 'social-proof-live' ); ?></button>
         <button class="splive-tab-btn" data-tab="urgency">⚡ <?php esc_html_e( 'Urgency', 'social-proof-live' ); ?></button>
         <button class="splive-tab-btn" data-tab="popups">🔔 <?php esc_html_e( 'Sales Popups', 'social-proof-live' ); ?></button>
         <button class="splive-tab-btn" data-tab="rules">🎯 <?php esc_html_e( 'Badge & Rules', 'social-proof-live' ); ?></button>
@@ -109,6 +110,64 @@ $settings = wp_parse_args( $settings, $defaults );
             </div>
         </div>
 
+
+        <!-- USP / Pro Tab -->
+        <div class="splive-tab-panel" data-panel="usp">
+            <div class="splive-card">
+                <h3 class="splive-card-title splive-mb-24">🔥 <?php esc_html_e( 'Live Demand Score Meter', 'social-proof-live' ); ?></h3>
+                <p class="splive-field-help splive-mb-24"><?php esc_html_e( 'A visual demand meter that blends live viewers, cart activity, real sales velocity, and stock scarcity into one compelling 0–100 score with an animated bar.', 'social-proof-live' ); ?></p>
+
+                <div class="splive-field">
+                    <label class="splive-toggle">
+                        <input type="checkbox" class="splive-toggle-input" name="enable_demand_score" <?php checked( $settings['enable_demand_score'] ); ?>>
+                        <span class="splive-toggle-track"></span>
+                        <span class="splive-toggle-label"><?php esc_html_e( 'Enable Demand Score meter', 'social-proof-live' ); ?></span>
+                    </label>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Minimum Score to Show', 'social-proof-live' ); ?></label>
+                    <input type="number" name="demand_min_show" class="splive-input" value="<?php echo esc_attr( $settings['demand_min_show'] ); ?>" min="0" max="100" style="max-width:120px;">
+                    <p class="splive-field-help"><?php esc_html_e( 'Hide the meter when demand is below this score (avoids showing "dead" products).', 'social-proof-live' ); ?></p>
+                </div>
+
+                <div class="splive-field splive-flex splive-gap-16">
+                    <div>
+                        <label class="splive-field-label"><?php esc_html_e( 'Viewers Cap', 'social-proof-live' ); ?></label>
+                        <input type="number" name="demand_viewers_cap" class="splive-input" value="<?php echo esc_attr( $settings['demand_viewers_cap'] ); ?>" min="1" max="1000" style="max-width:100px;">
+                    </div>
+                    <div>
+                        <label class="splive-field-label"><?php esc_html_e( 'Cart Cap', 'social-proof-live' ); ?></label>
+                        <input type="number" name="demand_cart_cap" class="splive-input" value="<?php echo esc_attr( $settings['demand_cart_cap'] ); ?>" min="1" max="1000" style="max-width:100px;">
+                    </div>
+                    <div>
+                        <label class="splive-field-label"><?php esc_html_e( 'Velocity Cap', 'social-proof-live' ); ?></label>
+                        <input type="number" name="demand_velocity_cap" class="splive-input" value="<?php echo esc_attr( $settings['demand_velocity_cap'] ); ?>" min="1" max="1000" style="max-width:100px;">
+                    </div>
+                </div>
+                <p class="splive-field-help"><?php esc_html_e( 'Caps = the value at which each signal contributes 100% to the score. Lower caps make the meter fill faster.', 'social-proof-live' ); ?></p>
+            </div>
+
+            <div class="splive-card">
+                <h3 class="splive-card-title splive-mb-24">🧪 <?php esc_html_e( 'Conversion Proof (A/B Test)', 'social-proof-live' ); ?></h3>
+                <p class="splive-field-help splive-mb-24"><?php esc_html_e( 'Scientifically PROVE the revenue this plugin earns you. A small control group sees NO social proof; everyone else does. We measure the real conversion lift and extra revenue — see it on the Dashboard & Analytics.', 'social-proof-live' ); ?></p>
+
+                <div class="splive-field">
+                    <label class="splive-toggle">
+                        <input type="checkbox" class="splive-toggle-input" name="enable_ab_test" <?php checked( $settings['enable_ab_test'] ); ?>>
+                        <span class="splive-toggle-track"></span>
+                        <span class="splive-toggle-label"><?php esc_html_e( 'Enable Conversion Proof A/B test', 'social-proof-live' ); ?></span>
+                    </label>
+                    <p class="splive-field-help"><?php esc_html_e( 'When ON, the control group will not see the product-page social proof so lift can be measured.', 'social-proof-live' ); ?></p>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Control Group Size (%)', 'social-proof-live' ); ?></label>
+                    <input type="number" name="ab_control_percent" class="splive-input" value="<?php echo esc_attr( $settings['ab_control_percent'] ); ?>" min="5" max="50" style="max-width:120px;">
+                    <p class="splive-field-help"><?php esc_html_e( 'Percentage of visitors who see NO social proof (the baseline). 15% is recommended.', 'social-proof-live' ); ?></p>
+                </div>
+            </div>
+        </div>
 
         <!-- Urgency Tab -->
         <div class="splive-tab-panel" data-panel="urgency">

@@ -47,13 +47,19 @@ class Data_Aggregator {
             'purchase'   => null,
             'stock'      => null,
             'countdown'  => null,
+            'demand'     => null,
             'show'       => false,
         );
+
+        $raw_viewers = 0;
+        $raw_cart    = 0;
+        $raw_stock   = null;
 
         // Viewer count.
         if ( ! empty( $this->settings['enable_viewers'] ) ) {
             $viewer_tracker = new Viewer_Tracker( $this->settings );
             $viewer_count   = $viewer_tracker->get_viewer_count( $product_id );
+            $raw_viewers    = $viewer_count;
 
             $min_viewers = isset( $this->settings['minimum_viewers'] ) ? (int) $this->settings['minimum_viewers'] : 2;
 
@@ -67,6 +73,7 @@ class Data_Aggregator {
         if ( ! empty( $this->settings['enable_cart'] ) ) {
             $cart_tracker = new Cart_Tracker( $this->settings );
             $cart_count   = $cart_tracker->get_cart_count( $product_id );
+            $raw_cart     = $cart_count;
 
             $min_cart = isset( $this->settings['minimum_cart'] ) ? (int) $this->settings['minimum_cart'] : 1;
 
@@ -97,6 +104,10 @@ class Data_Aggregator {
                     $stock_qty = $product->get_stock_quantity();
                     $threshold = isset( $this->settings['stock_threshold'] ) ? (int) $this->settings['stock_threshold'] : 10;
 
+                    if ( null !== $stock_qty ) {
+                        $raw_stock = (int) $stock_qty;
+                    }
+
                     if ( null !== $stock_qty && $stock_qty > 0 && $stock_qty <= $threshold ) {
                         $data['stock'] = (int) $stock_qty;
                         $data['show']  = true;
@@ -119,6 +130,14 @@ class Data_Aggregator {
                     }
                 }
             }
+        }
+
+        // Demand Score — blends viewers, cart, sales velocity, and scarcity.
+        $demand_engine = new Demand_Score( $this->settings );
+        $demand        = $demand_engine->calculate( $product_id, $raw_viewers, $raw_cart, $raw_stock );
+        if ( $demand ) {
+            $data['demand'] = $demand;
+            $data['show']   = true;
         }
 
         /**
@@ -163,6 +182,9 @@ class Data_Aggregator {
         } else {
             $response['countdown_seconds'] = null;
         }
+
+        // Demand score meter.
+        $response['demand'] = isset( $data['demand'] ) ? $data['demand'] : null;
 
         return $response;
     }

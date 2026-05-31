@@ -6,7 +6,7 @@ Tags: woocommerce, social proof, live viewers, fomo, conversion optimization
 Requires at least: 5.8
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,13 @@ Yes. The widget hooks into WooCommerce product page actions which work with all 
 5. Glass theme with dark mode
 
 == Changelog ==
+
+= 1.2.0 =
+* NEW USP: Live Demand Score meter — blends viewers, cart, real sales velocity & stock scarcity into an animated 0–100 demand bar with "Selling Fast / High Demand" labels
+* NEW USP: Conversion Proof (built-in A/B test) — splits visitors into control/treatment and reports the REAL measured conversion lift + extra revenue on the Dashboard & Analytics
+* A/B conversions attributed via order meta; per-variant visitors, conversions & revenue tracked
+* New experiments table (DB v1.2.0) with auto-migration + 90-day retention cleanup
+* Dashboard "Conversion Proof" card showing lift %, extra revenue, and per-variant conversion rates
 
 = 1.1.0 =
 * NEW: Recent Sales FOMO popups — real orders with buyer name, location, product image, time-ago, click-to-product
