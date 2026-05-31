@@ -1,0 +1,384 @@
+/**
+ * Social Proof LIVE — Frontend Widget Styles
+ *
+ * Premium SaaS-quality styling with themes, animations, responsive design,
+ * and dark mode support. Lightweight (< 3KB gzipped).
+ *
+ * @package SocialProofLive
+ */
+
+/* ==========================================================================
+   CSS Custom Properties (Design Tokens)
+   ========================================================================== */
+
+:root {
+    --splive-accent: #FF6B35;
+    --splive-accent-light: rgba(255, 107, 53, 0.08);
+    --splive-accent-glow: rgba(255, 107, 53, 0.24);
+    --splive-text-primary: #1a1a2e;
+    --splive-text-secondary: #4a5568;
+    --splive-bg: #f8fafc;
+    --splive-bg-glass: rgba(255, 255, 255, 0.72);
+    --splive-border: #e2e8f0;
+    --splive-border-glass: rgba(255, 255, 255, 0.18);
+    --splive-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --splive-shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.06);
+    --splive-radius: 8px;
+    --splive-font-size: inherit;
+    --splive-transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   Base Widget Styles
+   ========================================================================== */
+
+.splive-widget {
+    margin: 16px 0 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: var(--splive-font-size, 13px);
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity var(--splive-transition), transform var(--splive-transition);
+}
+
+.splive-widget.splive-visible {
+    display: block !important;
+}
+
+.splive-widget.splive-animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   Theme: Default
+   ========================================================================== */
+
+.splive-theme-default {
+    background: var(--splive-bg);
+    border: 1px solid var(--splive-border);
+    border-radius: var(--splive-radius);
+    padding: 14px 18px;
+    box-shadow: var(--splive-shadow);
+}
+
+/* ==========================================================================
+   Theme: Minimal
+   ========================================================================== */
+
+.splive-theme-minimal {
+    background: transparent;
+    border: none;
+    padding: 8px 0;
+    box-shadow: none;
+}
+
+.splive-theme-minimal .splive-line {
+    display: inline-flex;
+    margin-right: 16px;
+    font-size: 12px;
+    color: var(--splive-text-secondary);
+}
+
+.splive-theme-minimal .splive-line:not(:last-child)::after {
+    content: '·';
+    margin-left: 16px;
+    color: var(--splive-border);
+}
+
+/* ==========================================================================
+   Theme: Bold
+   ========================================================================== */
+
+.splive-theme-bold {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.splive-theme-bold .splive-viewers {
+    background: var(--splive-accent);
+    color: #ffffff;
+    padding: 12px 18px;
+    border-radius: var(--splive-radius);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.splive-theme-bold .splive-viewers strong {
+    color: #ffffff;
+    font-size: 1.1em;
+}
+
+.splive-theme-bold .splive-cart,
+.splive-theme-bold .splive-purchase {
+    padding: 4px 0;
+    color: var(--splive-text-secondary);
+    font-size: 12px;
+}
+
+/* ==========================================================================
+   Theme: Glass (Glassmorphism)
+   ========================================================================== */
+
+.splive-theme-glass {
+    background: var(--splive-bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--splive-border-glass);
+    border-radius: calc(var(--splive-radius) + 4px);
+    padding: 16px 20px;
+    box-shadow: var(--splive-shadow-glass);
+}
+
+/* ==========================================================================
+   Widget Lines
+   ========================================================================== */
+
+.splive-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    color: var(--splive-text-primary);
+}
+
+.splive-line + .splive-line {
+    margin-top: 2px;
+}
+
+.splive-icon {
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.splive-text {
+    flex: 1;
+    font-size: 13px;
+    color: var(--splive-text-secondary);
+}
+
+.splive-text strong {
+    color: var(--splive-text-primary);
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+/* Fade */
+.splive-animate-fade {
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+}
+.splive-animate-fade.splive-animated {
+    opacity: 1;
+}
+
+/* Slide Up */
+.splive-animate-slide-up {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+.splive-animate-slide-up.splive-animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Fade Slide (Default) */
+.splive-animate-fade-slide {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 400ms cubic-bezier(0, 0, 0.2, 1), transform 400ms cubic-bezier(0, 0, 0.2, 1);
+}
+.splive-animate-fade-slide.splive-animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Bounce */
+.splive-animate-bounce {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 500ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.splive-animate-bounce.splive-animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Scale */
+.splive-animate-scale {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+.splive-animate-scale.splive-animated {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* None */
+.splive-animate-none {
+    opacity: 1;
+    transform: none;
+    transition: none;
+}
+.splive-animate-none.splive-animated {
+    opacity: 1;
+}
+
+/* Line entrance */
+.splive-entering {
+    animation: splive-line-enter 400ms cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+@keyframes splive-line-enter {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Number pulse */
+.splive-pulse {
+    animation: splive-number-pulse 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes splive-number-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
+/* ==========================================================================
+   Dark Mode Support
+   ========================================================================== */
+
+.splive-scheme-dark .splive-widget,
+.splive-widget.splive-scheme-dark {
+    --splive-text-primary: #f1f5f9;
+    --splive-text-secondary: #cbd5e1;
+    --splive-bg: #1e293b;
+    --splive-bg-glass: rgba(30, 41, 59, 0.80);
+    --splive-border: #334155;
+    --splive-border-glass: rgba(255, 255, 255, 0.08);
+    --splive-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    --splive-shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Auto dark mode via media query */
+@media (prefers-color-scheme: dark) {
+    .splive-scheme-auto {
+        --splive-text-primary: #f1f5f9;
+        --splive-text-secondary: #cbd5e1;
+        --splive-bg: #1e293b;
+        --splive-bg-glass: rgba(30, 41, 59, 0.80);
+        --splive-border: #334155;
+        --splive-border-glass: rgba(255, 255, 255, 0.08);
+        --splive-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        --splive-shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .splive-scheme-auto.splive-theme-bold .splive-cart,
+    .splive-scheme-auto.splive-theme-bold .splive-purchase {
+        color: #94a3b8;
+    }
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .splive-widget {
+        margin: 12px 0 10px;
+    }
+
+    .splive-theme-default,
+    .splive-theme-glass {
+        padding: 12px 14px;
+    }
+
+    .splive-text {
+        font-size: 12px;
+    }
+
+    .splive-theme-minimal .splive-line {
+        display: flex;
+        margin-right: 0;
+    }
+
+    .splive-theme-minimal .splive-line:not(:last-child)::after {
+        display: none;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .splive-widget {
+        margin: 10px 0 8px;
+        font-size: 12px;
+    }
+
+    .splive-theme-default,
+    .splive-theme-glass {
+        padding: 10px 12px;
+        border-radius: calc(var(--splive-radius) - 2px);
+    }
+
+    .splive-line {
+        gap: 6px;
+        padding: 3px 0;
+    }
+
+    .splive-icon {
+        width: 16px;
+        font-size: 12px;
+    }
+
+    .splive-text {
+        font-size: 11px;
+    }
+
+    .splive-theme-bold .splive-viewers {
+        padding: 10px 14px;
+        font-size: 12px;
+    }
+}
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .splive-widget,
+    .splive-line,
+    .splive-entering,
+    .splive-pulse {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+/* ==========================================================================
+   Print - Hide widget
+   ========================================================================== */
+
+@media print {
+    .splive-widget {
+        display: none !important;
+    }
+}

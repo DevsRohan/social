@@ -1,0 +1,23 @@
+{
+    "name": "socialprooflive/social-proof-live",
+    "description": "Show REAL-TIME visitor activity on WooCommerce product pages — live viewer counts, cart activity, and recent purchases.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Social Proof LIVE",
+            "homepage": "https://socialprooflive.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "SocialProofLive\\": "includes/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
