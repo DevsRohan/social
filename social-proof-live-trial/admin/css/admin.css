@@ -1,0 +1,975 @@
+/**
+ * Social Proof LIVE — Admin Styles
+ *
+ * Premium SaaS-quality admin interface with glassmorphism,
+ * smooth animations, dark mode support, and responsive design.
+ *
+ * @package SocialProofLive
+ */
+
+/* ==========================================================================
+   Design Tokens
+   ========================================================================== */
+
+:root {
+    --splive-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --splive-accent: #FF6B35;
+    --splive-accent-hover: #E85D2C;
+    --splive-accent-light: rgba(255, 107, 53, 0.08);
+    --splive-accent-glow: rgba(255, 107, 53, 0.24);
+    --splive-success: #10B981;
+    --splive-warning: #F59E0B;
+    --splive-error: #EF4444;
+    --splive-info: #3B82F6;
+
+    --splive-bg-page: #f8fafc;
+    --splive-bg-card: #ffffff;
+    --splive-bg-elevated: #ffffff;
+    --splive-bg-input: #ffffff;
+
+    --splive-text-primary: #0f172a;
+    --splive-text-secondary: #475569;
+    --splive-text-tertiary: #94a3b8;
+    --splive-text-inverse: #ffffff;
+
+    --splive-border: #e2e8f0;
+    --splive-border-light: #f1f5f9;
+
+    --splive-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --splive-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+    --splive-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+    --splive-radius-sm: 6px;
+    --splive-radius-md: 8px;
+    --splive-radius-lg: 12px;
+    --splive-radius-xl: 16px;
+
+    --splive-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --splive-transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   Page Container
+   ========================================================================== */
+
+.splive-admin-wrap {
+    font-family: var(--splive-font);
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    color: var(--splive-text-primary);
+    -webkit-font-smoothing: antialiased;
+}
+
+.splive-admin-wrap * {
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Page Header
+   ========================================================================== */
+
+.splive-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--splive-border-light);
+}
+
+.splive-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.splive-header-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--splive-text-primary);
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+
+.splive-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--splive-success);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+}
+
+.splive-header-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--splive-success);
+    border-radius: 50%;
+    animation: splive-pulse-dot 2s infinite;
+}
+
+@keyframes splive-pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.splive-header-version {
+    font-size: 12px;
+    color: var(--splive-text-tertiary);
+}
+
+/* ==========================================================================
+   Stat Cards
+   ========================================================================== */
+
+.splive-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.splive-stat-card {
+    background: var(--splive-bg-card);
+    border: 1px solid var(--splive-border);
+    border-radius: var(--splive-radius-lg);
+    padding: 20px 24px;
+    transition: transform var(--splive-transition-fast), box-shadow var(--splive-transition-fast);
+}
+
+.splive-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--splive-shadow-md);
+}
+
+.splive-stat-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--splive-accent-light);
+    border-radius: var(--splive-radius-md);
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.splive-stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--splive-text-primary);
+    letter-spacing: -0.025em;
+    margin-bottom: 4px;
+}
+
+.splive-stat-label {
+    font-size: 13px;
+    color: var(--splive-text-secondary);
+    font-weight: 500;
+}
+
+.splive-stat-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.splive-stat-change.positive {
+    color: var(--splive-success);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.splive-stat-change.negative {
+    color: var(--splive-error);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* ==========================================================================
+   Cards / Panels
+   ========================================================================== */
+
+.splive-card {
+    background: var(--splive-bg-card);
+    border: 1px solid var(--splive-border);
+    border-radius: var(--splive-radius-lg);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--splive-shadow-sm);
+}
+
+.splive-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.splive-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--splive-text-primary);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.splive-card-action {
+    font-size: 13px;
+    color: var(--splive-accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--splive-transition-fast);
+}
+
+.splive-card-action:hover {
+    color: var(--splive-accent-hover);
+}
+
+/* ==========================================================================
+   Charts
+   ========================================================================== */
+
+.splive-chart-container {
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.splive-chart-empty {
+    color: var(--splive-text-tertiary);
+    font-size: 14px;
+    text-align: center;
+    padding: 40px;
+}
+
+.splive-svg-chart {
+    width: 100%;
+    height: auto;
+}
+
+/* ==========================================================================
+   Table
+   ========================================================================== */
+
+.splive-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.splive-table th {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--splive-text-tertiary);
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--splive-border);
+}
+
+.splive-table td {
+    font-size: 13px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--splive-border-light);
+    color: var(--splive-text-secondary);
+}
+
+.splive-table tr:last-child td {
+    border-bottom: none;
+}
+
+.splive-table tr:hover td {
+    background: var(--splive-bg-page);
+}
+
+.splive-center {
+    text-align: center;
+}
+
+.splive-product-name {
+    font-weight: 500;
+    color: var(--splive-text-primary);
+}
+
+.splive-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 12px;
+}
+
+.splive-badge-viewers {
+    background: var(--splive-accent-light);
+    color: var(--splive-accent);
+}
+
+.splive-empty-state {
+    text-align: center;
+    color: var(--splive-text-tertiary);
+    padding: 32px 16px !important;
+    font-style: italic;
+}
+
+/* ==========================================================================
+   Tabs
+   ========================================================================== */
+
+.splive-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--splive-border);
+    margin-bottom: 24px;
+    overflow-x: auto;
+}
+
+.splive-tab-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--splive-text-secondary);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color var(--splive-transition-fast), border-color var(--splive-transition-fast);
+    white-space: nowrap;
+}
+
+.splive-tab-btn:hover {
+    color: var(--splive-text-primary);
+}
+
+.splive-tab-btn.active {
+    color: var(--splive-accent);
+    border-bottom-color: var(--splive-accent);
+    font-weight: 600;
+}
+
+.splive-tab-panel {
+    display: none;
+}
+
+.splive-tab-panel.active {
+    display: block;
+    animation: splive-fade-in 200ms ease-out;
+}
+
+@keyframes splive-fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Form Controls
+   ========================================================================== */
+
+.splive-field {
+    margin-bottom: 20px;
+}
+
+.splive-field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--splive-text-primary);
+    margin-bottom: 6px;
+}
+
+.splive-field-help {
+    font-size: 12px;
+    color: var(--splive-text-tertiary);
+    margin-top: 4px;
+}
+
+.splive-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 9px 14px;
+    font-size: 14px;
+    font-family: var(--splive-font);
+    color: var(--splive-text-primary);
+    background: var(--splive-bg-input);
+    border: 1px solid var(--splive-border);
+    border-radius: var(--splive-radius-md);
+    transition: border-color var(--splive-transition-fast), box-shadow var(--splive-transition-fast);
+    outline: none;
+}
+
+.splive-input:focus {
+    border-color: var(--splive-accent);
+    box-shadow: 0 0 0 3px var(--splive-accent-light);
+}
+
+.splive-select {
+    appearance: none;
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%2364748b' d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+/* Toggle Switch */
+.splive-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.splive-toggle-track {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #cbd5e1;
+    border-radius: 12px;
+    transition: background var(--splive-transition-fast);
+}
+
+.splive-toggle-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.splive-toggle-input:checked + .splive-toggle-track {
+    background: var(--splive-accent);
+}
+
+.splive-toggle-track::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: transform var(--splive-transition-fast);
+}
+
+.splive-toggle-input:checked + .splive-toggle-track::after {
+    transform: translateX(20px);
+}
+
+.splive-toggle-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--splive-text-primary);
+}
+
+/* Range Slider */
+.splive-range {
+    width: 100%;
+    max-width: 300px;
+    height: 4px;
+    appearance: none;
+    background: var(--splive-border);
+    border-radius: 2px;
+    outline: none;
+}
+
+.splive-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--splive-accent);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px var(--splive-accent-glow);
+}
+
+.splive-range-value {
+    display: inline-block;
+    min-width: 36px;
+    padding: 2px 8px;
+    background: var(--splive-bg-page);
+    border-radius: var(--splive-radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin-left: 12px;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.splive-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--splive-font);
+    border-radius: var(--splive-radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--splive-transition-fast);
+    text-decoration: none;
+    line-height: 1.4;
+}
+
+.splive-btn-primary {
+    background: var(--splive-accent);
+    color: var(--splive-text-inverse);
+    box-shadow: 0 1px 3px rgba(255, 107, 53, 0.3);
+}
+
+.splive-btn-primary:hover {
+    background: var(--splive-accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.splive-btn-primary:active {
+    transform: translateY(0);
+}
+
+.splive-btn-secondary {
+    background: var(--splive-bg-page);
+    color: var(--splive-text-secondary);
+    border: 1px solid var(--splive-border);
+}
+
+.splive-btn-secondary:hover {
+    background: var(--splive-border-light);
+    color: var(--splive-text-primary);
+}
+
+.splive-btn-pulse {
+    animation: splive-btn-glow 2s infinite;
+}
+
+@keyframes splive-btn-glow {
+    0%, 100% { box-shadow: 0 1px 3px rgba(255, 107, 53, 0.3); }
+    50% { box-shadow: 0 2px 16px rgba(255, 107, 53, 0.4); }
+}
+
+.splive-save-btn {
+    min-width: 140px;
+}
+
+/* ==========================================================================
+   Date Range Buttons
+   ========================================================================== */
+
+.splive-date-range {
+    display: flex;
+    gap: 4px;
+    background: var(--splive-bg-page);
+    border-radius: var(--splive-radius-md);
+    padding: 4px;
+}
+
+.splive-date-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--splive-text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: var(--splive-radius-sm);
+    cursor: pointer;
+    transition: all var(--splive-transition-fast);
+}
+
+.splive-date-btn:hover {
+    color: var(--splive-text-primary);
+}
+
+.splive-date-btn.active {
+    background: var(--splive-bg-card);
+    color: var(--splive-text-primary);
+    box-shadow: var(--splive-shadow-sm);
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   Onboarding Wizard
+   ========================================================================== */
+
+.splive-onboarding {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ff6b35 0%, #3b82f6 100%);
+    padding: 20px;
+    transition: opacity 300ms ease;
+}
+
+.splive-wizard-card {
+    background: white;
+    border-radius: var(--splive-radius-xl);
+    padding: 48px 40px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.splive-wizard-logo {
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+
+.splive-wizard-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--splive-text-primary);
+    margin: 0 0 8px;
+}
+
+.splive-wizard-subtitle {
+    font-size: 14px;
+    color: var(--splive-text-secondary);
+    margin: 0 0 32px;
+}
+
+.splive-wizard-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 32px;
+}
+
+.splive-wizard-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--splive-border);
+    transition: all var(--splive-transition-normal);
+}
+
+.splive-wizard-dot.active {
+    background: var(--splive-accent);
+}
+
+.splive-wizard-dot.current {
+    width: 24px;
+    border-radius: 4px;
+    background: var(--splive-accent);
+}
+
+.splive-wizard-step {
+    display: none;
+}
+
+.splive-wizard-step.active {
+    display: block;
+    animation: splive-fade-in 300ms ease-out;
+}
+
+.splive-wizard-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+    text-align: left;
+}
+
+.splive-wizard-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--splive-bg-page);
+    border: 1px solid var(--splive-border);
+    border-radius: var(--splive-radius-md);
+    cursor: pointer;
+    transition: all var(--splive-transition-fast);
+}
+
+.splive-wizard-option:hover {
+    border-color: var(--splive-accent);
+    background: var(--splive-accent-light);
+}
+
+.splive-wizard-option.selected {
+    border-color: var(--splive-accent);
+    background: var(--splive-accent-light);
+}
+
+.splive-wizard-option-icon {
+    font-size: 20px;
+}
+
+.splive-wizard-option-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--splive-text-primary);
+}
+
+.splive-wizard-skip {
+    display: block;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--splive-text-tertiary);
+    text-decoration: none;
+}
+
+.splive-wizard-skip:hover {
+    color: var(--splive-text-secondary);
+}
+
+/* ==========================================================================
+   Toast Notifications
+   ========================================================================== */
+
+.splive-toast-container {
+    position: fixed;
+    top: 40px;
+    right: 20px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.splive-toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    background: var(--splive-bg-card);
+    border-radius: var(--splive-radius-md);
+    box-shadow: var(--splive-shadow-lg);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--splive-text-primary);
+    transform: translateX(120%);
+    transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-left: 4px solid var(--splive-success);
+}
+
+.splive-toast.visible {
+    transform: translateX(0);
+}
+
+.splive-toast-error {
+    border-left-color: var(--splive-error);
+}
+
+.splive-toast-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+}
+
+.splive-toast-success .splive-toast-icon {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--splive-success);
+}
+
+.splive-toast-error .splive-toast-icon {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--splive-error);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .splive-admin-wrap {
+        padding: 0 12px;
+    }
+
+    .splive-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .splive-stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .splive-wizard-card {
+        padding: 32px 24px;
+    }
+
+    .splive-tabs {
+        gap: 0;
+    }
+
+    .splive-tab-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .splive-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .splive-card {
+        padding: 16px;
+    }
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+.splive-mt-0 { margin-top: 0; }
+.splive-mb-0 { margin-bottom: 0; }
+.splive-mb-16 { margin-bottom: 16px; }
+.splive-mb-24 { margin-bottom: 24px; }
+.splive-flex { display: flex; }
+.splive-items-center { align-items: center; }
+.splive-justify-between { justify-content: space-between; }
+.splive-gap-8 { gap: 8px; }
+.splive-gap-12 { gap: 12px; }
+.splive-gap-16 { gap: 16px; }
+
+
+/* ==========================================================================
+   Conversion Proof Card (USP)
+   ========================================================================== */
+
+.splive-proof-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--splive-success);
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 20px;
+}
+
+.splive-proof-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.splive-proof-lift,
+.splive-proof-revenue {
+    padding: 20px;
+    border-radius: var(--splive-radius-lg);
+    text-align: center;
+}
+
+.splive-proof-lift {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.12), rgba(255, 107, 53, 0.04));
+    border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.splive-proof-revenue {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.04));
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.splive-proof-lift-value,
+.splive-proof-revenue-value {
+    display: block;
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.splive-proof-lift-value {
+    color: var(--splive-accent);
+}
+
+.splive-proof-revenue-value {
+    color: var(--splive-success);
+}
+
+.splive-proof-revenue-value::before {
+    content: '₹';
+    font-size: 22px;
+    vertical-align: top;
+    margin-right: 2px;
+}
+
+.splive-proof-lift-label,
+.splive-proof-revenue-label {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--splive-text-secondary);
+}
+
+.splive-proof-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.splive-proof-col {
+    padding: 16px;
+    border: 1px solid var(--splive-border);
+    border-radius: var(--splive-radius-md);
+    text-align: center;
+}
+
+.splive-proof-col-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--splive-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.splive-proof-cr {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--splive-text-primary);
+    margin: 6px 0 2px;
+}
+
+.splive-proof-meta {
+    font-size: 12px;
+    color: var(--splive-text-tertiary);
+}
+
+.splive-proof-note {
+    margin: 16px 0 0;
+    font-size: 12px;
+    color: var(--splive-text-secondary);
+}
+
+.splive-proof-note-pending {
+    color: var(--splive-warning);
+}
+
+@media (max-width: 600px) {
+    .splive-proof-hero,
+    .splive-proof-split {
+        grid-template-columns: 1fr;
+    }
+}

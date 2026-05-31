@@ -12,18 +12,21 @@ They are streamed securely by ../api/download.php:
   - Pro:    download.php?type=pro&token=...   (only after a verified payment)
 
 ----------------------------------------------------------------
-HOW TO BUILD THE TWO ZIPS (from the /social-proof-live plugin folder)
+HOW TO BUILD THE TWO ZIPS
 ----------------------------------------------------------------
 
-PRO build:
-  - Just zip the plugin folder as-is.
-  - zip -r social-proof-live-pro.zip social-proof-live
+Both plugin folders are ready in the repository root — just zip them:
 
-TRIAL build (24h self-expiring):
-  - Open social-proof-live/social-proof-live.php
-  - Add this line right after the other define() constants near the top:
-        define( 'SPLIVE_TRIAL', true );
-  - Then zip it:
-        zip -r social-proof-live-trial.zip social-proof-live
-  - The trial runs fully for 24 hours, then deactivates AND deletes itself
-    (the bundled includes/class-trial.php handles this automatically).
+PRO build (folder: /social-proof-live):
+  zip -r social-proof-live-pro.zip social-proof-live
+
+TRIAL build (folder: /social-proof-live-trial) — already configured:
+  zip -r social-proof-live-trial.zip social-proof-live-trial
+
+The trial folder already has `define( 'SPLIVE_TRIAL', true );` set, so it:
+  - runs every feature for 24 hours,
+  - shows a LIVE countdown timer at the top of the WordPress admin,
+  - links "Upgrade to Pro" to https://devsarun.io/plugin/chat/,
+  - and deactivates + deletes itself automatically after 24 hours.
+
+Then drop both ZIPs into this /downloads folder with the exact names above.
