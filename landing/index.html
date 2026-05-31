@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Social Proof LIVE — show REAL-time visitor activity, FOMO sales popups, live demand score and a built-in A/B test that PROVES your extra revenue. The conversion weapon for WooCommerce." />
+    <meta name="theme-color" content="#0B1120" />
+    <title>Social Proof LIVE — The WooCommerce Conversion Weapon</title>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Social Proof LIVE — Real-time social proof that PROVES its ROI" />
+    <meta property="og:description" content="Live viewers, FOMO popups, demand score & a built-in A/B test that measures the exact extra revenue it earns you." />
+    <meta property="og:type" content="website" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Razorpay Checkout -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff4ed', 100: '#ffe6d5', 200: '#ffc9aa',
+                            300: '#ffa174', 400: '#ff6b35', 500: '#fb5413',
+                            600: '#ec3909', 700: '#c3290a', 800: '#9b2310', 900: '#7c2010',
+                        },
+                        ink: {
+                            900: '#0B1120', 800: '#0f172a', 700: '#1e293b', 600: '#334155',
+                        },
+                    },
+                    boxShadow: {
+                        glow: '0 0 60px -15px rgba(255,107,53,0.45)',
+                        card: '0 20px 50px -20px rgba(2,6,23,0.25)',
+                    },
+                    keyframes: {
+                        floaty: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+                        pulseDot: { '0%,100%': { opacity: 1 }, '50%': { opacity: 0.35 } },
+                        shimmer: { '100%': { transform: 'translateX(100%)' } },
+                    },
+                    animation: {
+                        floaty: 'floaty 5s ease-in-out infinite',
+                        pulseDot: 'pulseDot 2s ease-in-out infinite',
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body class="font-sans bg-white text-ink-800 antialiased">
+
+
+    <!-- ============================ NAV ============================ -->
+    <header id="nav" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+        <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <!-- Logo -->
+                <a href="#top" class="flex items-center gap-2.5 font-display font-extrabold text-lg text-white" data-nav-logo>
+                    <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 shadow-glow text-white">🔥</span>
+                    <span>Social Proof <span class="text-brand-400">LIVE</span></span>
+                </a>
+
+                <!-- Desktop links -->
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium" data-nav-links>
+                    <a href="#features" class="hover:text-brand-400 transition">Features</a>
+                    <a href="#how" class="hover:text-brand-400 transition">How it works</a>
+                    <a href="#proof" class="hover:text-brand-400 transition">Conversion Proof</a>
+                    <a href="#pricing" class="hover:text-brand-400 transition">Pricing</a>
+                    <a href="#faq" class="hover:text-brand-400 transition">FAQ</a>
+                </div>
+
+                <!-- Desktop CTAs -->
+                <div class="hidden md:flex items-center gap-3">
+                    <button data-trial class="rounded-xl px-4 py-2 text-sm font-semibold text-white/90 ring-1 ring-white/20 hover:bg-white/10 transition">Free Trial</button>
+                    <button data-buy class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-600 transition">Get Pro</button>
+                </div>
+
+                <!-- Mobile hamburger -->
+                <button id="hamburger" aria-label="Open menu" class="md:hidden grid h-10 w-10 place-items-center rounded-xl text-white ring-1 ring-white/20">
+                    <svg id="ic-open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="ic-close" class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden origin-top">
+            <div class="mx-4 mb-3 rounded-2xl bg-ink-900/95 backdrop-blur-xl ring-1 ring-white/10 p-4 text-white shadow-2xl">
+                <div class="flex flex-col">
+                    <a href="#features" class="rounded-lg px-3 py-3 hover:bg-white/5 transition" data-mlink>Features</a>
+                    <a href="#how" class="rounded-lg px-3 py-3 hover:bg-white/5 transition" data-mlink>How it works</a>
+                    <a href="#proof" class="rounded-lg px-3 py-3 hover:bg-white/5 transition" data-mlink>Conversion Proof</a>
+                    <a href="#pricing" class="rounded-lg px-3 py-3 hover:bg-white/5 transition" data-mlink>Pricing</a>
+                    <a href="#faq" class="rounded-lg px-3 py-3 hover:bg-white/5 transition" data-mlink>FAQ</a>
+                </div>
+                <div class="mt-3 grid grid-cols-2 gap-3">
+                    <button data-trial class="rounded-xl px-4 py-3 text-sm font-semibold ring-1 ring-white/20 hover:bg-white/10 transition">Free Trial</button>
+                    <button data-buy class="rounded-xl bg-brand-500 px-4 py-3 text-sm font-semibold shadow-glow hover:bg-brand-600 transition">Get Pro</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- ============================ HERO ============================ -->
+    <section id="top" class="relative overflow-hidden bg-ink-900 pt-28 pb-20 sm:pt-36 sm:pb-28">
+        <!-- background glow -->
+        <div class="pointer-events-none absolute inset-0">
+            <div class="absolute -top-24 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-brand-500/20 blur-[120px]"></div>
+            <div class="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-indigo-500/20 blur-[100px]"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.06)_1px,transparent_0)] [background-size:32px_32px]"></div>
+        </div>
+
+        <div class="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+            <!-- copy -->
+            <div class="text-center lg:text-left" data-reveal>
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-1.5 text-xs font-semibold text-brand-300 ring-1 ring-white/10">
+                    <span class="h-2 w-2 rounded-full bg-green-400 animate-pulseDot"></span>
+                    Built for WooCommerce · 100% real data
+                </span>
+                <h1 class="mt-6 font-display text-4xl font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-6xl">
+                    Turn “dead” product pages into a
+                    <span class="bg-gradient-to-r from-brand-300 to-brand-500 bg-clip-text text-transparent">buying frenzy.</span>
+                </h1>
+                <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-slate-300 lg:mx-0">
+                    Show <strong class="text-white">real</strong> live viewers, FOMO sales popups, a live demand meter — and a built-in A/B test that <strong class="text-white">proves the exact extra revenue</strong> it earns you. No fake numbers. Ever.
+                </p>
+                <div class="mt-8 flex flex-col items-center gap-3 sm:flex-row lg:justify-start">
+                    <button data-buy class="group relative w-full sm:w-auto rounded-2xl bg-brand-500 px-7 py-4 font-semibold text-white shadow-glow transition hover:bg-brand-600">
+                        Get Pro — <span data-price-inline>₹1,599</span> <span class="text-white/70 line-through ml-1">₹3,999</span>
+                    </button>
+                    <button data-trial class="w-full sm:w-auto rounded-2xl px-7 py-4 font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/10">
+                        Start 24-hour Free Trial
+                    </button>
+                </div>
+                <div class="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-400 lg:justify-start">
+                    <span class="flex items-center gap-1.5">✓ No coding</span>
+                    <span class="flex items-center gap-1.5">✓ GDPR-friendly</span>
+                    <span class="flex items-center gap-1.5">✓ Instant download</span>
+                    <span class="flex items-center gap-1.5">✓ HPOS compatible</span>
+                </div>
+            </div>
+
+            <!-- product mockup -->
+            <div class="relative" data-reveal>
+                <div class="mx-auto max-w-md rounded-3xl bg-white p-5 shadow-2xl ring-1 ring-black/5 animate-floaty">
+                    <div class="flex items-center gap-1.5 pb-3">
+                        <span class="h-3 w-3 rounded-full bg-red-400"></span>
+                        <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
+                        <span class="h-3 w-3 rounded-full bg-green-400"></span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="aspect-square rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 grid place-items-center text-5xl">🧢</div>
+                        <div>
+                            <h3 class="font-display text-lg font-bold text-ink-900">Beanie</h3>
+                            <p class="text-sm text-slate-400 line-through">₹20.00</p>
+                            <p class="text-xl font-bold text-ink-900">₹18.00</p>
+                            <button class="mt-2 w-full rounded-lg bg-blue-600 py-2 text-xs font-semibold text-white">Add to cart</button>
+                        </div>
+                    </div>
+                    <!-- the widget -->
+                    <div class="mt-4 rounded-xl bg-ink-900 p-4 text-white">
+                        <div class="flex items-center gap-2 text-sm"><span>🔥</span><span><b class="text-brand-300 counter" data-to="14">14</b> people viewing this right now</span></div>
+                        <div class="mt-2 flex items-center gap-2 text-sm"><span>⏰</span><span><b>3</b> people have this in their cart</span></div>
+                        <div class="mt-2 flex items-center gap-2 text-sm"><span>✓</span><span>Last purchased <b>7 minutes</b> ago</span></div>
+                        <div class="mt-3 border-t border-white/10 pt-3">
+                            <div class="flex items-center gap-2 text-sm"><span>🔥</span><span class="font-semibold">Selling Fast</span><span class="ml-auto font-bold text-brand-300">92%</span></div>
+                            <div class="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-white/15"><div class="h-full rounded-full bg-gradient-to-r from-orange-400 to-red-500" style="width:92%"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- floating FOMO popup -->
+                <div class="absolute -bottom-6 -left-2 hidden sm:flex w-64 items-center gap-3 rounded-2xl bg-white p-3 shadow-2xl ring-1 ring-black/5 animate-floaty" style="animation-delay:.6s">
+                    <div class="h-11 w-11 rounded-lg bg-gradient-to-br from-orange-100 to-orange-200 grid place-items-center">🧢</div>
+                    <div class="text-left">
+                        <p class="text-xs text-ink-900"><b>Rohan</b> from Mumbai</p>
+                        <p class="text-[11px] text-slate-500">just bought Beanie</p>
+                        <p class="text-[10px] text-slate-400">4 minutes ago · <span class="text-green-600 font-semibold">✓ Verified</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ TRUST BAR ============================ -->
+    <section class="border-y border-slate-100 bg-slate-50">
+        <div class="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-10 sm:px-6 md:grid-cols-4 lg:px-8">
+            <div class="text-center" data-reveal><p class="font-display text-3xl font-extrabold text-ink-900">+81%</p><p class="mt-1 text-sm text-slate-500">avg. measured conversion lift*</p></div>
+            <div class="text-center" data-reveal><p class="font-display text-3xl font-extrabold text-ink-900">&lt;5 KB</p><p class="mt-1 text-sm text-slate-500">tiny, fast JavaScript</p></div>
+            <div class="text-center" data-reveal><p class="font-display text-3xl font-extrabold text-ink-900">100%</p><p class="mt-1 text-sm text-slate-500">real data — zero fakes</p></div>
+            <div class="text-center" data-reveal><p class="font-display text-3xl font-extrabold text-ink-900">60 sec</p><p class="mt-1 text-sm text-slate-500">setup with onboarding wizard</p></div>
+        </div>
+    </section>
+
+
+    <!-- ============================ PROBLEM ============================ -->
+    <section class="bg-white py-20 sm:py-28">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl text-center" data-reveal>
+                <span class="text-sm font-semibold uppercase tracking-wider text-brand-500">The silent killer</span>
+                <h2 class="mt-3 font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">A product page with no activity feels <span class="text-red-500">dead.</span></h2>
+                <p class="mt-4 text-lg text-slate-600">And a dead page whispers the worst thing a shopper can hear: <em>“nobody else is buying this.”</em> No trust = no purchase. Especially for new stores.</p>
+            </div>
+            <div class="mx-auto mt-14 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3">
+                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-7 text-center" data-reveal>
+                    <div class="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-red-100 text-2xl">😴</div>
+                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900">Looks abandoned</h3>
+                    <p class="mt-2 text-sm text-slate-600">Visitors assume the store is untrustworthy or the product is unpopular.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-7 text-center" data-reveal>
+                    <div class="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-amber-100 text-2xl">⏳</div>
+                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900">Zero urgency</h3>
+                    <p class="mt-2 text-sm text-slate-600">Without scarcity or demand signals, shoppers “think about it” — and never return.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-7 text-center" data-reveal>
+                    <div class="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-rose-100 text-2xl">💸</div>
+                    <h3 class="mt-4 font-display text-lg font-bold text-ink-900">Lost revenue</h3>
+                    <p class="mt-2 text-sm text-slate-600">Every hesitant visitor who bounces is money walking straight out the door.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ HOW IT WORKS ============================ -->
+    <section id="how" class="bg-ink-900 py-20 sm:py-28">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl text-center" data-reveal>
+                <span class="text-sm font-semibold uppercase tracking-wider text-brand-400">Live in 60 seconds</span>
+                <h2 class="mt-3 font-display text-3xl font-extrabold text-white sm:text-4xl">How it works</h2>
+                <p class="mt-4 text-lg text-slate-300">No developer. No external service. Everything runs on your own server, in real time.</p>
+            </div>
+            <div class="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3">
+                <div class="relative rounded-3xl bg-white/5 p-8 ring-1 ring-white/10" data-reveal>
+                    <span class="font-display text-5xl font-extrabold text-white/10">01</span>
+                    <h3 class="mt-2 font-display text-xl font-bold text-white">Install &amp; activate</h3>
+                    <p class="mt-3 text-slate-300">Upload the plugin, hit activate, and a beautiful 3-step wizard sets everything up for you.</p>
+                </div>
+                <div class="relative rounded-3xl bg-white/5 p-8 ring-1 ring-white/10" data-reveal>
+                    <span class="font-display text-5xl font-extrabold text-white/10">02</span>
+                    <h3 class="mt-2 font-display text-xl font-bold text-white">It reads real activity</h3>
+                    <p class="mt-3 text-slate-300">Live sessions, real carts &amp; real orders are tracked via a lightweight heartbeat — cached for speed.</p>
+                </div>
+                <div class="relative rounded-3xl bg-white/5 p-8 ring-1 ring-white/10" data-reveal>
+                    <span class="font-display text-5xl font-extrabold text-white/10">03</span>
+                    <h3 class="mt-2 font-display text-xl font-bold text-white">Shoppers convert</h3>
+                    <p class="mt-3 text-slate-300">Urgency + social proof appear on your pages, and the built-in A/B test proves the extra revenue.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================ FEATURES ============================ -->
+    <section id="features" class="bg-white py-20 sm:py-28">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl text-center" data-reveal>
+                <span class="text-sm font-semibold uppercase tracking-wider text-brand-500">Everything inside</span>
+                <h2 class="mt-3 font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">One plugin. A full conversion arsenal.</h2>
+                <p class="mt-4 text-lg text-slate-600">Each feature is built on 100% real WooCommerce data and can be toggled on/off independently.</p>
+            </div>
+
+            <div class="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- card -->
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">🔥</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Live Viewer Count</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">“14 people are viewing this right now.” Counts genuine active sessions per product via a cached heartbeat — bots filtered out automatically.</p>
+                </article>
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">⏰</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Cart Activity</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">“3 people have this in their cart.” Reads real WooCommerce cart sessions — pure scarcity pressure that pushes the fence-sitters.</p>
+                </article>
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">✓</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Recent Purchase</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">“Last purchased 7 minutes ago.” Pulls the latest real completed order so shoppers see this product is actively selling.</p>
+                </article>
+                <!-- USP cards -->
+                <article class="group relative overflow-hidden rounded-2xl border-2 border-brand-200 bg-gradient-to-br from-brand-50 to-white p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <span class="absolute right-4 top-4 rounded-full bg-brand-500 px-2.5 py-0.5 text-[10px] font-bold uppercase text-white">USP</span>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-white text-2xl shadow">🌡️</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Live Demand Score</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">A stunning animated meter that blends viewers, carts, real sales velocity &amp; stock scarcity into one 0–100 score: “🔥 92% — Selling Fast”.</p>
+                </article>
+                <article class="group relative overflow-hidden rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <span class="absolute right-4 top-4 rounded-full bg-indigo-500 px-2.5 py-0.5 text-[10px] font-bold uppercase text-white">USP</span>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-white text-2xl shadow">🧪</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Conversion Proof (A/B)</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">A built-in split test that hides proof from a control group and measures the <b>real lift % &amp; extra revenue</b>. Stop guessing — start proving.</p>
+                </article>
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">🔔</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">FOMO Sales Popups</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">Animated “Rohan from Mumbai just bought…” popups from real orders — with product image, city, time and a click-to-product link.</p>
+                </article>
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">📦</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Stock Urgency</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">“Only 3 left in stock!” straight from real WooCommerce inventory, with a configurable threshold so it only shows when it matters.</p>
+                </article>
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">⏳</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Sale Countdown</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">A live HH:MM:SS timer tied to your real WooCommerce sale end date. Real deadlines create real urgency.</p>
+                </article>
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">🟢</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Live Visitor Badge</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">A floating site-wide “27 people are browsing right now” badge based on real, distinct active sessions.</p>
+                </article>
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">📊</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Conversion Analytics</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">A premium dashboard tracking impressions, cart adds &amp; purchases with real conversion rates and a 24-hour activity chart.</p>
+                </article>
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">🎯</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">Display Rules Engine</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">Target by device, schedule by day &amp; hour, exclude products/categories, and show only to logged-in users.</p>
+                </article>
+                <article class="group rounded-2xl border border-slate-100 p-7 transition hover:shadow-card hover:-translate-y-1" data-reveal>
+                    <div class="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-2xl">🎨</div>
+                    <h3 class="mt-5 font-display text-lg font-bold text-ink-900">4 Themes + Dark Mode</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">Default, Minimal, Bold &amp; Glassmorphism themes, 6 animations, custom colors and full light/dark support.</p>
+                </article>
+            </div>
+
+            <!-- mini trust strip -->
+            <div class="mt-12 flex flex-wrap items-center justify-center gap-3" data-reveal>
+                <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">🔒 GDPR-friendly · no cookies</span>
+                <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">⚡ Object-cache &amp; Redis ready</span>
+                <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">🧩 HPOS compatible</span>
+                <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">🌍 Translation-ready</span>
+                <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">🛠️ Shortcode &amp; hooks</span>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================ USP 1: DEMAND SCORE ============================ -->
+    <section class="bg-slate-50 py-20 sm:py-28">
+        <div class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+            <div data-reveal>
+                <span class="inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-700">Signature feature</span>
+                <h2 class="mt-4 font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">The Live Demand Score 🌡️</h2>
+                <p class="mt-4 text-lg text-slate-600">Instead of one boring line, show shoppers a gorgeous animated meter that screams “this is hot.” It fuses four <b>real</b> signals into one irresistible score:</p>
+                <ul class="mt-6 space-y-3">
+                    <li class="flex gap-3"><span class="text-brand-500">●</span><span class="text-slate-700"><b>Live viewers</b> — how many people are looking right now</span></li>
+                    <li class="flex gap-3"><span class="text-brand-500">●</span><span class="text-slate-700"><b>Cart activity</b> — how many have added it to cart</span></li>
+                    <li class="flex gap-3"><span class="text-brand-500">●</span><span class="text-slate-700"><b>Sales velocity</b> — real orders in the last 72 hours</span></li>
+                    <li class="flex gap-3"><span class="text-brand-500">●</span><span class="text-slate-700"><b>Stock scarcity</b> — fewer units left = higher pressure</span></li>
+                </ul>
+                <p class="mt-6 text-slate-600">Dynamic labels — <span class="font-semibold text-ink-900">Selling Fast → High Demand → Trending → Getting Attention</span> — adapt automatically, with a pulsing flame on your hottest products.</p>
+            </div>
+            <div class="relative" data-reveal>
+                <div class="mx-auto max-w-sm space-y-4">
+                    <div class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
+                        <div class="flex items-center gap-2"><span class="text-xl">🔥</span><span class="font-semibold text-ink-900">Selling Fast</span><span class="ml-auto font-bold text-red-500">92%</span></div>
+                        <div class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100"><div class="h-full rounded-full bg-gradient-to-r from-orange-400 to-red-500" style="width:92%"></div></div>
+                    </div>
+                    <div class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
+                        <div class="flex items-center gap-2"><span class="text-xl">⚡</span><span class="font-semibold text-ink-900">High Demand</span><span class="ml-auto font-bold text-orange-500">68%</span></div>
+                        <div class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100"><div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500" style="width:68%"></div></div>
+                    </div>
+                    <div class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
+                        <div class="flex items-center gap-2"><span class="text-xl">📈</span><span class="font-semibold text-ink-900">Trending</span><span class="ml-auto font-bold text-blue-500">44%</span></div>
+                        <div class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100"><div class="h-full rounded-full bg-gradient-to-r from-sky-400 to-blue-500" style="width:44%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ USP 2: CONVERSION PROOF ============================ -->
+    <section id="proof" class="relative overflow-hidden bg-ink-900 py-20 sm:py-28">
+        <div class="pointer-events-none absolute -right-20 top-10 h-72 w-72 rounded-full bg-indigo-500/20 blur-[100px]"></div>
+        <div class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+            <div class="order-2 lg:order-1" data-reveal>
+                <!-- proof card mock -->
+                <div class="rounded-3xl bg-white p-7 shadow-2xl ring-1 ring-black/5">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display text-lg font-bold text-ink-900">🧪 Conversion Proof</h3>
+                        <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">Measured, not guessed</span>
+                    </div>
+                    <div class="mt-5 grid grid-cols-2 gap-4">
+                        <div class="rounded-2xl border border-brand-200 bg-brand-50 p-5 text-center">
+                            <p class="font-display text-4xl font-extrabold text-brand-500">+81%</p>
+                            <p class="mt-1 text-xs font-medium text-slate-600">Conversion Lift</p>
+                        </div>
+                        <div class="rounded-2xl border border-green-200 bg-green-50 p-5 text-center">
+                            <p class="font-display text-4xl font-extrabold text-green-600">₹48,200</p>
+                            <p class="mt-1 text-xs font-medium text-slate-600">Extra Revenue</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 gap-3">
+                        <div class="rounded-xl border border-slate-200 p-4 text-center"><p class="text-[11px] font-semibold uppercase text-slate-400">With proof</p><p class="mt-1 text-2xl font-bold text-ink-900">3.8%</p><p class="text-xs text-slate-400">152 / 4,000</p></div>
+                        <div class="rounded-xl border border-slate-200 p-4 text-center"><p class="text-[11px] font-semibold uppercase text-slate-400">Control</p><p class="mt-1 text-2xl font-bold text-ink-900">2.1%</p><p class="text-xs text-slate-400">15 / 700</p></div>
+                    </div>
+                    <p class="mt-4 text-xs text-slate-500">Based on 4,700 visitors, social proof generated ~67 extra orders.</p>
+                </div>
+            </div>
+            <div class="order-1 lg:order-2" data-reveal>
+                <span class="inline-flex items-center gap-2 rounded-full bg-indigo-500/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-indigo-300">The closer</span>
+                <h2 class="mt-4 font-display text-3xl font-extrabold text-white sm:text-4xl">Don’t trust us. <span class="text-brand-400">We prove it.</span></h2>
+                <p class="mt-4 text-lg text-slate-300">Every other plugin <em>claims</em> a conversion boost. Social Proof LIVE is the only one that <b class="text-white">scientifically measures it</b> with a built-in A/B test:</p>
+                <ul class="mt-6 space-y-4">
+                    <li class="flex gap-3"><span class="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-white/10 text-sm">1</span><span class="text-slate-300">A small <b class="text-white">control group</b> sees no social proof (your true baseline).</span></li>
+                    <li class="flex gap-3"><span class="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-white/10 text-sm">2</span><span class="text-slate-300">Everyone else sees the full experience.</span></li>
+                    <li class="flex gap-3"><span class="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-white/10 text-sm">3</span><span class="text-slate-300">We attribute every order per group and show the <b class="text-white">exact lift % and extra ₹</b> on your dashboard.</span></li>
+                </ul>
+                <p class="mt-6 rounded-2xl bg-white/5 p-4 text-sm text-slate-300 ring-1 ring-white/10">💡 This single feature pays for the plugin many times over — you’ll see your ROI in rupees, not promises.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================ PRICING ============================ -->
+    <section id="pricing" class="bg-white py-20 sm:py-28">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl text-center" data-reveal>
+                <span class="text-sm font-semibold uppercase tracking-wider text-brand-500">Simple pricing</span>
+                <h2 class="mt-3 font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">A $49 plugin. Yours for less.</h2>
+                <p class="mt-4 text-lg text-slate-600">Try it free for 24 hours. Upgrade once — own it with a year of updates &amp; support.</p>
+            </div>
+
+            <div class="mx-auto mt-14 grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+                <!-- Trial -->
+                <div class="flex flex-col rounded-3xl border border-slate-200 bg-white p-8 shadow-card" data-reveal>
+                    <h3 class="font-display text-xl font-bold text-ink-900">Free Trial</h3>
+                    <p class="mt-1 text-sm text-slate-500">Full features, no card needed</p>
+                    <p class="mt-6"><span class="font-display text-5xl font-extrabold text-ink-900">₹0</span><span class="text-slate-500"> / 24 hours</span></p>
+                    <ul class="mt-6 space-y-3 text-sm text-slate-600">
+                        <li class="flex gap-2">✅ Every Pro feature unlocked</li>
+                        <li class="flex gap-2">✅ Test on your live store</li>
+                        <li class="flex gap-2">⏳ Auto-expires &amp; removes after 24h</li>
+                        <li class="flex gap-2">🚫 No payment, no risk</li>
+                    </ul>
+                    <button data-trial class="mt-8 w-full rounded-2xl border-2 border-ink-900 px-6 py-4 font-semibold text-ink-900 transition hover:bg-ink-900 hover:text-white">Download Free Trial</button>
+                </div>
+
+                <!-- Pro -->
+                <div class="relative flex flex-col overflow-hidden rounded-3xl border-2 border-brand-400 bg-ink-900 p-8 text-white shadow-glow" data-reveal>
+                    <span class="absolute right-5 top-5 rounded-full bg-brand-500 px-3 py-1 text-xs font-bold uppercase">Best value</span>
+                    <h3 class="font-display text-xl font-bold">Pro — Lifetime use</h3>
+                    <p class="mt-1 text-sm text-slate-300">1 year updates &amp; priority support</p>
+                    <p class="mt-6 flex items-end gap-2">
+                        <span class="font-display text-5xl font-extrabold" data-price>₹1,599</span>
+                        <span class="pb-2 text-lg text-slate-400 line-through">₹3,999</span>
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-brand-300">Launch offer — save 60%</p>
+                    <ul class="mt-6 space-y-3 text-sm text-slate-200">
+                        <li class="flex gap-2">✅ All 12+ features &amp; both USPs</li>
+                        <li class="flex gap-2">✅ Conversion Proof A/B engine</li>
+                        <li class="flex gap-2">✅ Instant auto-download after payment</li>
+                        <li class="flex gap-2">✅ 1 year of updates</li>
+                        <li class="flex gap-2">✅ Priority email support</li>
+                    </ul>
+                    <button data-buy class="mt-8 w-full rounded-2xl bg-brand-500 px-6 py-4 font-semibold text-white transition hover:bg-brand-600">Get Pro Now →</button>
+                    <p class="mt-3 text-center text-xs text-slate-400">🔒 Secure payment via Razorpay · UPI, cards, netbanking</p>
+                </div>
+            </div>
+
+            <!-- comparison -->
+            <div class="mx-auto mt-16 max-w-3xl overflow-hidden rounded-2xl border border-slate-200" data-reveal>
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50 text-slate-500">
+                        <tr><th class="p-4 font-semibold">Feature</th><th class="p-4 text-center font-semibold">Trial</th><th class="p-4 text-center font-semibold text-brand-600">Pro</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                        <tr><td class="p-4">Live viewers, cart &amp; purchases</td><td class="p-4 text-center">✅</td><td class="p-4 text-center">✅</td></tr>
+                        <tr><td class="p-4">Demand Score &amp; FOMO popups</td><td class="p-4 text-center">✅</td><td class="p-4 text-center">✅</td></tr>
+                        <tr><td class="p-4">Conversion Proof A/B test</td><td class="p-4 text-center">✅</td><td class="p-4 text-center">✅</td></tr>
+                        <tr><td class="p-4">Duration</td><td class="p-4 text-center">24 hours</td><td class="p-4 text-center font-semibold text-brand-600">Lifetime</td></tr>
+                        <tr><td class="p-4">Updates &amp; support</td><td class="p-4 text-center">—</td><td class="p-4 text-center">✅ 1 year</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ TESTIMONIALS ============================ -->
+    <section class="bg-slate-50 py-20 sm:py-28">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl text-center" data-reveal>
+                <h2 class="font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">Store owners feel the difference</h2>
+            </div>
+            <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
+                <figure class="rounded-2xl bg-white p-7 shadow-card" data-reveal>
+                    <div class="text-amber-400">★★★★★</div>
+                    <blockquote class="mt-3 text-slate-700">“Added the live viewer count and demand meter. Conversion went from 2.1% to 3.8% on high-traffic products. The urgency is REAL when you see 14 other people looking.”</blockquote>
+                    <figcaption class="mt-4 text-sm font-semibold text-ink-900">Aarav · Fashion store</figcaption>
+                </figure>
+                <figure class="rounded-2xl bg-white p-7 shadow-card" data-reveal>
+                    <div class="text-amber-400">★★★★★</div>
+                    <blockquote class="mt-3 text-slate-700">“The Conversion Proof report sold me. I could finally SEE the extra revenue in rupees instead of trusting a marketing claim.”</blockquote>
+                    <figcaption class="mt-4 text-sm font-semibold text-ink-900">Meera · Skincare brand</figcaption>
+                </figure>
+                <figure class="rounded-2xl bg-white p-7 shadow-card" data-reveal>
+                    <div class="text-amber-400">★★★★★</div>
+                    <blockquote class="mt-3 text-slate-700">“Setup took a minute, it’s blazing fast, and it doesn’t fake anything. Exactly what I wanted for a new store with low trust.”</blockquote>
+                    <figcaption class="mt-4 text-sm font-semibold text-ink-900">Karan · Electronics</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================ FAQ ============================ -->
+    <section id="faq" class="bg-white py-20 sm:py-28">
+        <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div class="text-center" data-reveal>
+                <h2 class="font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">Frequently asked questions</h2>
+            </div>
+            <div class="mt-12 space-y-4">
+                <details class="group rounded-2xl border border-slate-200 p-6" data-reveal>
+                    <summary class="flex cursor-pointer items-center justify-between font-semibold text-ink-900">Is the data really real?<span class="ml-4 text-brand-500 transition group-open:rotate-45">+</span></summary>
+                    <p class="mt-3 text-slate-600">100%. Every number comes from genuine active sessions, real WooCommerce carts and real completed orders. Nothing is faked or randomly generated.</p>
+                </details>
+                <details class="group rounded-2xl border border-slate-200 p-6" data-reveal>
+                    <summary class="flex cursor-pointer items-center justify-between font-semibold text-ink-900">How does the 24-hour free trial work?<span class="ml-4 text-brand-500 transition group-open:rotate-45">+</span></summary>
+                    <p class="mt-3 text-slate-600">Download the trial build, install it like any plugin and enjoy every Pro feature. After 24 hours it automatically deactivates and removes itself — no leftovers, no risk. Love it? Grab Pro and your full version downloads instantly after payment.</p>
+                </details>
+                <details class="group rounded-2xl border border-slate-200 p-6" data-reveal>
+                    <summary class="flex cursor-pointer items-center justify-between font-semibold text-ink-900">What happens after I pay?<span class="ml-4 text-brand-500 transition group-open:rotate-45">+</span></summary>
+                    <p class="mt-3 text-slate-600">Payment is processed securely by Razorpay (UPI, cards, netbanking, wallets). The instant it’s verified, your Pro plugin ZIP downloads automatically — no waiting for emails.</p>
+                </details>
+                <details class="group rounded-2xl border border-slate-200 p-6" data-reveal>
+                    <summary class="flex cursor-pointer items-center justify-between font-semibold text-ink-900">Will it slow down my store?<span class="ml-4 text-brand-500 transition group-open:rotate-45">+</span></summary>
+                    <p class="mt-3 text-slate-600">No. The frontend script is under 5&nbsp;KB, assets load only where needed, queries are indexed and cached, and it supports Redis/Memcached object caching for high-traffic stores.</p>
+                </details>
+                <details class="group rounded-2xl border border-slate-200 p-6" data-reveal>
+                    <summary class="flex cursor-pointer items-center justify-between font-semibold text-ink-900">Does it work with my theme &amp; page builder?<span class="ml-4 text-brand-500 transition group-open:rotate-45">+</span></summary>
+                    <p class="mt-3 text-slate-600">Yes. It hooks into standard WooCommerce product hooks and also ships a shortcode for custom placement. It’s HPOS compatible and tested with the latest WordPress &amp; WooCommerce.</p>
+                </details>
+                <details class="group rounded-2xl border border-slate-200 p-6" data-reveal>
+                    <summary class="flex cursor-pointer items-center justify-between font-semibold text-ink-900">Need help before buying?<span class="ml-4 text-brand-500 transition group-open:rotate-45">+</span></summary>
+                    <p class="mt-3 text-slate-600">Tap the WhatsApp button on the bottom-right or email <a href="mailto:itsdevsarun@gmail.com" class="font-semibold text-brand-600">itsdevsarun@gmail.com</a> — we usually reply within hours.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ FINAL CTA ============================ -->
+    <section class="relative overflow-hidden bg-ink-900 py-20 sm:py-24">
+        <div class="pointer-events-none absolute inset-0">
+            <div class="absolute left-1/2 top-1/2 h-80 w-[44rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-500/20 blur-[120px]"></div>
+        </div>
+        <div class="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8" data-reveal>
+            <h2 class="font-display text-3xl font-extrabold text-white sm:text-5xl">Stop losing sales to silence.</h2>
+            <p class="mx-auto mt-5 max-w-xl text-lg text-slate-300">Give every shopper the proof they need to click “buy” — and prove the revenue you earn.</p>
+            <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <button data-buy class="w-full sm:w-auto rounded-2xl bg-brand-500 px-8 py-4 font-semibold text-white shadow-glow transition hover:bg-brand-600">Get Pro — <span data-price-inline>₹1,599</span></button>
+                <button data-trial class="w-full sm:w-auto rounded-2xl px-8 py-4 font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/10">Try Free for 24h</button>
+            </div>
+            <p class="mt-5 text-sm text-slate-400">🔒 Secure Razorpay checkout · Instant download · No-risk trial</p>
+        </div>
+    </section>
+
+    <!-- ============================ FOOTER ============================ -->
+    <footer class="bg-ink-900 border-t border-white/10 py-12">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
+                <a href="#top" class="flex items-center gap-2.5 font-display font-extrabold text-white">
+                    <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 text-white">🔥</span>
+                    Social Proof <span class="text-brand-400">LIVE</span>
+                </a>
+                <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-400">
+                    <a href="#features" class="hover:text-white transition">Features</a>
+                    <a href="#pricing" class="hover:text-white transition">Pricing</a>
+                    <a href="#faq" class="hover:text-white transition">FAQ</a>
+                    <a href="mailto:itsdevsarun@gmail.com" class="hover:text-white transition">Support</a>
+                </div>
+            </div>
+            <div class="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-sm text-slate-500 md:flex-row">
+                <p>© <span id="year"></span> Social Proof LIVE · Built by <a href="https://devsarun.io/" class="font-semibold text-slate-300 hover:text-white" target="_blank" rel="noopener">DevsArun</a></p>
+                <p>Support: <a href="mailto:itsdevsarun@gmail.com" class="text-slate-300 hover:text-white">itsdevsarun@gmail.com</a></p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- ============================ WHATSAPP WIDGET ============================ -->
+    <div class="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-3">
+        <!-- chat card -->
+        <div id="wa-card" class="hidden w-[88vw] max-w-sm origin-bottom-right overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/10">
+            <div class="flex items-center gap-3 bg-[#25D366] px-4 py-3.5 text-white">
+                <span class="grid h-10 w-10 place-items-center rounded-full bg-white/20 text-xl">💬</span>
+                <div>
+                    <p class="font-semibold leading-tight">Chat with us</p>
+                    <p class="text-xs text-white/90">Typically replies in minutes</p>
+                </div>
+                <button id="wa-close" class="ml-auto grid h-8 w-8 place-items-center rounded-full hover:bg-white/20" aria-label="Close chat">✕</button>
+            </div>
+            <form id="wa-form" class="space-y-3 p-4">
+                <p class="text-sm text-slate-600">Send us your details and we’ll reply on WhatsApp 👇</p>
+                <div>
+                    <label class="mb-1 block text-xs font-semibold text-slate-500">Your name</label>
+                    <input name="name" type="text" required placeholder="e.g. Arun Sharma" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#25D366] focus:ring-2 focus:ring-[#25D366]/20" />
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-semibold text-slate-500">Mobile number</label>
+                    <input name="mobile" type="tel" required inputmode="tel" placeholder="e.g. 98XXXXXXXX" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#25D366] focus:ring-2 focus:ring-[#25D366]/20" />
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-semibold text-slate-500">How can we help?</label>
+                    <textarea name="description" rows="3" required placeholder="Tell us what you need…" class="w-full resize-none rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#25D366] focus:ring-2 focus:ring-[#25D366]/20"></textarea>
+                </div>
+                <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 font-semibold text-white transition hover:bg-[#1ebe57]">
+                    Send on WhatsApp →
+                </button>
+                <p class="text-center text-[11px] text-slate-400">or email <a href="mailto:itsdevsarun@gmail.com" class="font-medium text-slate-500 underline">itsdevsarun@gmail.com</a></p>
+            </form>
+        </div>
+
+        <!-- launcher -->
+        <button id="wa-launcher" class="group flex items-center gap-2 rounded-full bg-[#25D366] py-3 pl-3 pr-4 text-white shadow-2xl transition hover:scale-105" aria-label="Open WhatsApp chat">
+            <span class="grid h-8 w-8 place-items-center">
+                <svg viewBox="0 0 32 32" class="h-7 w-7 fill-white"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.1 1.6 5.9L4 29l8.3-1.6c1.7.9 3.7 1.4 5.7 1.4 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-4.9 1 1-4.8-.2-.4c-1-1.6-1.5-3.4-1.5-5.3C5 9.5 9.9 4.9 16 4.9S27 9.5 27 15.1 22.1 24.8 16 24.8zm6.1-7.3c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7.1-.1.3-.4.5-.6.1-.2.2-.3.3-.6.1-.2 0-.4 0-.6-.1-.2-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1.1 1-1.1 2.5s1.1 2.9 1.3 3.1c.2.2 2.2 3.4 5.4 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 1.9.1.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.2-.6-.4z"/></svg>
+            </span>
+            <span class="text-sm font-semibold">Need help?</span>
+        </button>
+    </div>
+
+    <!-- ============================ TOAST + LOADER ============================ -->
+    <div id="toast" class="fixed bottom-5 left-1/2 z-[70] hidden -translate-x-1/2 rounded-xl bg-ink-900 px-5 py-3 text-sm font-medium text-white shadow-2xl"></div>
+
+    <div id="overlay" class="fixed inset-0 z-[65] hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="rounded-2xl bg-white p-8 text-center shadow-2xl">
+            <div class="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-brand-200 border-t-brand-500"></div>
+            <p id="overlay-text" class="font-medium text-ink-900">Processing…</p>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

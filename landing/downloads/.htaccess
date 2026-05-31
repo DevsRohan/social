@@ -1,0 +1,8 @@
+# Block direct web access to the plugin ZIPs.
+# They are served securely through ../api/download.php (server-side readfile),
+# so they never need to be directly downloadable by URL.
+Require all denied
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

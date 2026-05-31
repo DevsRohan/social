@@ -31,6 +31,12 @@ class Plugin {
     public function init() {
         $this->settings = $this->get_settings();
 
+        // Trial mode (24-hour self-expiring build). Returns false when expired.
+        $trial = new Trial();
+        if ( ! $trial->init() ) {
+            return;
+        }
+
         // Core components.
         $this->init_database();
         $this->init_cache();
