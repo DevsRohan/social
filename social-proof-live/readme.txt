@@ -1,14 +1,16 @@
 === Social Proof LIVE — Real-Time Visitor Activity for WooCommerce ===
-Contributors: socialprooflive
-Tags: woocommerce, social proof, live viewers, urgency, conversion optimization
+Contributors: devsarun
+Author: DevsArun
+Author URI: https://devsarun.io/
+Tags: woocommerce, social proof, live viewers, fomo, conversion optimization
 Requires at least: 5.8
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Show REAL-TIME visitor activity on product pages — live viewer counts, cart activity, and recent purchases. 100% real data, zero fakes.
+Real-time social proof + FOMO suite for WooCommerce: live viewers, cart activity, recent purchases, sales popups, stock urgency & countdowns. 100% real data.
 
 == Description ==
 
@@ -90,6 +92,16 @@ Yes. The widget hooks into WooCommerce product page actions which work with all 
 5. Glass theme with dark mode
 
 == Changelog ==
+
+= 1.1.0 =
+* NEW: Recent Sales FOMO popups — real orders with buyer name, location, product image, time-ago, click-to-product
+* NEW: Low stock urgency ("Only X left") using real WooCommerce stock
+* NEW: Live sale countdown timer tied to WooCommerce sale end dates
+* NEW: Site-wide floating live-visitor badge ("X people browsing")
+* NEW: Real conversion tracking — impressions, cart adds, purchases + conversion rate in Analytics
+* NEW: Display Rules engine — device targeting, day/hour scheduling, logged-in-only
+* NEW: Sound + privacy/anonymize options for popups
+* Author changed to DevsArun (https://devsarun.io/)
 
 = 1.0.0 =
 * Initial release

@@ -171,11 +171,136 @@
             hideLine(widget.querySelector('.splive-purchase'));
         }
 
+        // Update stock urgency.
+        if (config.enableStock && data.stock !== null && data.stock > 0) {
+            var stockEl = widget.querySelector('.splive-stock');
+            if (stockEl) {
+                var stockText = config.textStock.replace('{count}', '<strong>' + parseInt(data.stock, 10) + '</strong>');
+                updateLine(stockEl, stockText);
+                hasContent = true;
+            }
+        } else {
+            hideLine(widget.querySelector('.splive-stock'));
+        }
+
+        // Update sale countdown.
+        if (config.enableCountdown && data.countdown_seconds !== null && data.countdown_seconds > 0) {
+            var countdownEl = widget.querySelector('.splive-countdown');
+            if (countdownEl) {
+                startCountdown(countdownEl, parseInt(data.countdown_seconds, 10));
+                hasContent = true;
+            }
+        } else {
+            hideLine(widget.querySelector('.splive-countdown'));
+            stopCountdown();
+        }
+
         if (hasContent) {
             showWidget(widget);
+            fireImpression(widget);
         } else {
             hideWidget(widget);
         }
+    }
+
+    var countdownTimer = null;
+    var countdownRemaining = 0;
+
+    /**
+     * Start (or restart) the sale countdown ticking every second locally.
+     */
+    function startCountdown(el, seconds) {
+        countdownRemaining = seconds;
+        renderCountdown(el);
+
+        if (el.style.display === 'none') {
+            el.style.display = '';
+            el.classList.add('splive-entering');
+            setTimeout(function () { el.classList.remove('splive-entering'); }, 400);
+        }
+
+        if (countdownTimer) {
+            clearInterval(countdownTimer);
+        }
+
+        countdownTimer = setInterval(function () {
+            countdownRemaining--;
+            if (countdownRemaining <= 0) {
+                stopCountdown();
+                el.style.display = 'none';
+                return;
+            }
+            renderCountdown(el);
+        }, 1000);
+    }
+
+    /**
+     * Stop the countdown timer.
+     */
+    function stopCountdown() {
+        if (countdownTimer) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+        }
+    }
+
+    /**
+     * Render the countdown text (HH:MM:SS or with days).
+     */
+    function renderCountdown(el) {
+        var textEl = el.querySelector('.splive-text');
+        if (!textEl) return;
+
+        var s = countdownRemaining;
+        var days = Math.floor(s / 86400);
+        s -= days * 86400;
+        var hours = Math.floor(s / 3600);
+        s -= hours * 3600;
+        var mins = Math.floor(s / 60);
+        var secs = s - mins * 60;
+
+        var time = '';
+        if (days > 0) {
+            time = days + 'd ';
+        }
+        time += pad(hours) + ':' + pad(mins) + ':' + pad(secs);
+
+        textEl.innerHTML = config.textCountdown.replace('{time}', '<strong>' + time + '</strong>');
+    }
+
+    function pad(n) {
+        return n < 10 ? '0' + n : '' + n;
+    }
+
+    var impressionFired = false;
+
+    /**
+     * Fire a one-time conversion impression beacon for this session.
+     */
+    function fireImpression(widget) {
+        if (impressionFired || !config.enableConversionTracking) {
+            return;
+        }
+        var productId = widget.getAttribute('data-product-id');
+        if (!productId) return;
+
+        impressionFired = true;
+
+        var data = JSON.stringify({
+            product_id: parseInt(productId, 10),
+            session_hash: sessionHash
+        });
+
+        fetch(config.restUrl + 'impression', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-WP-Nonce': config.nonce
+            },
+            body: data,
+            credentials: 'same-origin',
+            keepalive: true
+        }).catch(function () {});
     }
 
     /**

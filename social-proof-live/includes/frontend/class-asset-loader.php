@@ -39,6 +39,7 @@ class Asset_Loader {
      */
     public function init() {
         add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_global' ) );
     }
 
     /**
@@ -126,6 +127,11 @@ class Asset_Loader {
             'enableViewers'    => (bool) $this->settings['enable_viewers'],
             'enableCart'       => (bool) $this->settings['enable_cart'],
             'enablePurchase'   => (bool) $this->settings['enable_purchase'],
+            'enableStock'      => (bool) $this->settings['enable_stock'],
+            'enableCountdown'  => (bool) $this->settings['enable_countdown'],
+            'textStock'        => $this->settings['text_stock'],
+            'textCountdown'    => $this->settings['text_countdown'],
+            'enableConversionTracking' => (bool) $this->settings['enable_conversion_tracking'],
         ) );
     }
 
@@ -134,6 +140,7 @@ class Asset_Loader {
      *
      * @return string CSS string.
      */
+
     private function generate_custom_css() {
         $accent = sanitize_hex_color( $this->settings['accent_color'] );
         $radius = absint( $this->settings['border_radius'] );
@@ -146,11 +153,74 @@ class Asset_Loader {
 
         if ( 'inherit' !== $font ) {
             $sizes = array( 'sm' => '12px', 'md' => '14px', 'lg' => '16px' );
-            $css .= '--splive-font-size: ' . ( $sizes[ $font ] ?? '14px' ) . ';';
+            $css .= '--splive-font-size: ' . ( isset( $sizes[ $font ] ) ? $sizes[ $font ] : '14px' ) . ';';
         }
 
         $css .= '}';
 
         return $css;
+    }
+
+    /**
+     * Enqueue site-wide assets (FOMO notifications + visitor badge).
+     *
+     * @return void
+     */
+    public function maybe_enqueue_global() {
+        $notifications_on = ! empty( $this->settings['enable_notifications'] );
+        $badge_on         = ! empty( $this->settings['enable_visitor_badge'] );
+
+        if ( ( ! $notifications_on && ! $badge_on ) || is_admin() || is_feed() ) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'splive-notifications',
+            SPLIVE_PLUGIN_URL . 'public/css/notifications.css',
+            array(),
+            SPLIVE_VERSION
+        );
+
+        $custom_css = $this->generate_custom_css();
+        if ( $custom_css ) {
+            wp_add_inline_style( 'splive-notifications', $custom_css );
+        }
+
+        wp_enqueue_script(
+            'splive-notifications',
+            SPLIVE_PLUGIN_URL . 'public/js/notifications.js',
+            array(),
+            SPLIVE_VERSION,
+            true
+        );
+
+        $is_product_page = function_exists( 'is_product' ) && is_product();
+
+        wp_localize_script( 'splive-notifications', 'spliveGlobal', array(
+            'restUrl'             => rest_url( 'splive/v1/' ),
+            'nonce'               => wp_create_nonce( 'wp_rest' ),
+            'pollInterval'        => max( 10, (int) $this->settings['heartbeat_interval'] ) * 1000,
+            'enableNotifications' => $notifications_on,
+            'notifPosition'       => $this->settings['notif_position'],
+            'notifDisplayTime'    => (int) $this->settings['notif_display_time'] * 1000,
+            'notifGap'            => (int) $this->settings['notif_gap'] * 1000,
+            'notifInitialDelay'   => (int) $this->settings['notif_initial_delay'] * 1000,
+            'notifLoop'           => (bool) $this->settings['notif_loop'],
+            'notifShowImage'      => (bool) $this->settings['notif_show_image'],
+            'notifShowLocation'   => (bool) $this->settings['notif_show_location'],
+            'notifShowTime'       => (bool) $this->settings['notif_show_time'],
+            'notifClickToProduct' => (bool) $this->settings['notif_click_to_product'],
+            'notifHideOnMobile'   => (bool) $this->settings['notif_hide_on_mobile'],
+            'notifSound'          => (bool) $this->settings['notif_sound'],
+            'textNotif'           => $this->settings['text_notif'],
+            'textNotifNoLocation' => $this->settings['text_notif_no_location'],
+            'textNotifVerb'       => $this->settings['text_notif_verb'],
+            'enableBadge'         => $badge_on,
+            'badgePosition'       => $this->settings['badge_position'],
+            'textBadge'           => $this->settings['text_badge'],
+            'iconBadge'           => $this->settings['icon_badge'],
+            'allowedDevices'      => array_values( (array) $this->settings['rules_devices'] ),
+            'sendGlobalHeartbeat' => ! $is_product_page,
+        ) );
     }
 }

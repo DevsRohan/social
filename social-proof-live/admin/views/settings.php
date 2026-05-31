@@ -26,6 +26,9 @@ $settings = wp_parse_args( $settings, $defaults );
     <!-- Tabs -->
     <div class="splive-tabs">
         <button class="splive-tab-btn active" data-tab="display"><?php esc_html_e( 'Display', 'social-proof-live' ); ?></button>
+        <button class="splive-tab-btn" data-tab="urgency">⚡ <?php esc_html_e( 'Urgency', 'social-proof-live' ); ?></button>
+        <button class="splive-tab-btn" data-tab="popups">🔔 <?php esc_html_e( 'Sales Popups', 'social-proof-live' ); ?></button>
+        <button class="splive-tab-btn" data-tab="rules">🎯 <?php esc_html_e( 'Badge & Rules', 'social-proof-live' ); ?></button>
         <button class="splive-tab-btn" data-tab="appearance"><?php esc_html_e( 'Appearance', 'social-proof-live' ); ?></button>
         <button class="splive-tab-btn" data-tab="text"><?php esc_html_e( 'Text & Labels', 'social-proof-live' ); ?></button>
         <button class="splive-tab-btn" data-tab="behavior"><?php esc_html_e( 'Behavior', 'social-proof-live' ); ?></button>
@@ -106,6 +109,240 @@ $settings = wp_parse_args( $settings, $defaults );
             </div>
         </div>
 
+
+        <!-- Urgency Tab -->
+        <div class="splive-tab-panel" data-panel="urgency">
+            <div class="splive-card">
+                <h3 class="splive-card-title splive-mb-24">📦 <?php esc_html_e( 'Low Stock Urgency', 'social-proof-live' ); ?></h3>
+
+                <div class="splive-field">
+                    <label class="splive-toggle">
+                        <input type="checkbox" class="splive-toggle-input" name="enable_stock" <?php checked( $settings['enable_stock'] ); ?>>
+                        <span class="splive-toggle-track"></span>
+                        <span class="splive-toggle-label"><?php esc_html_e( 'Show "Only X left in stock"', 'social-proof-live' ); ?></span>
+                    </label>
+                    <p class="splive-field-help"><?php esc_html_e( 'Uses real WooCommerce stock. Only shows for products that manage stock.', 'social-proof-live' ); ?></p>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Stock Threshold', 'social-proof-live' ); ?></label>
+                    <input type="number" name="stock_threshold" class="splive-input" value="<?php echo esc_attr( $settings['stock_threshold'] ); ?>" min="1" max="1000" style="max-width:120px;">
+                    <p class="splive-field-help"><?php esc_html_e( 'Only show the stock line when remaining stock is at or below this number.', 'social-proof-live' ); ?></p>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Stock Message', 'social-proof-live' ); ?></label>
+                    <input type="text" name="text_stock" class="splive-input" value="<?php echo esc_attr( $settings['text_stock'] ); ?>" style="max-width:100%;">
+                    <p class="splive-field-help"><?php esc_html_e( 'Use {count} for the remaining quantity.', 'social-proof-live' ); ?></p>
+                </div>
+            </div>
+
+            <div class="splive-card">
+                <h3 class="splive-card-title splive-mb-24">⏳ <?php esc_html_e( 'Sale Countdown Timer', 'social-proof-live' ); ?></h3>
+
+                <div class="splive-field">
+                    <label class="splive-toggle">
+                        <input type="checkbox" class="splive-toggle-input" name="enable_countdown" <?php checked( $settings['enable_countdown'] ); ?>>
+                        <span class="splive-toggle-track"></span>
+                        <span class="splive-toggle-label"><?php esc_html_e( 'Show live sale countdown', 'social-proof-live' ); ?></span>
+                    </label>
+                    <p class="splive-field-help"><?php esc_html_e( 'Counts down to the WooCommerce "Sale end date". Only shows when a sale end date is set.', 'social-proof-live' ); ?></p>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Countdown Message', 'social-proof-live' ); ?></label>
+                    <input type="text" name="text_countdown" class="splive-input" value="<?php echo esc_attr( $settings['text_countdown'] ); ?>" style="max-width:100%;">
+                    <p class="splive-field-help"><?php esc_html_e( 'Use {time} for the live countdown (HH:MM:SS).', 'social-proof-live' ); ?></p>
+                </div>
+            </div>
+
+            <div class="splive-card">
+                <h3 class="splive-card-title splive-mb-24">📊 <?php esc_html_e( 'Conversion Tracking', 'social-proof-live' ); ?></h3>
+                <div class="splive-field">
+                    <label class="splive-toggle">
+                        <input type="checkbox" class="splive-toggle-input" name="enable_conversion_tracking" <?php checked( $settings['enable_conversion_tracking'] ); ?>>
+                        <span class="splive-toggle-track"></span>
+                        <span class="splive-toggle-label"><?php esc_html_e( 'Track impressions, cart adds & purchases', 'social-proof-live' ); ?></span>
+                    </label>
+                    <p class="splive-field-help"><?php esc_html_e( 'Powers the real conversion-rate numbers on the Analytics page.', 'social-proof-live' ); ?></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales Popups Tab -->
+        <div class="splive-tab-panel" data-panel="popups">
+            <div class="splive-card">
+                <h3 class="splive-card-title splive-mb-24">🔔 <?php esc_html_e( 'Recent Sales Popups (FOMO)', 'social-proof-live' ); ?></h3>
+
+                <div class="splive-field">
+                    <label class="splive-toggle">
+                        <input type="checkbox" class="splive-toggle-input" name="enable_notifications" <?php checked( $settings['enable_notifications'] ); ?>>
+                        <span class="splive-toggle-track"></span>
+                        <span class="splive-toggle-label"><?php esc_html_e( 'Enable recent sales popups', 'social-proof-live' ); ?></span>
+                    </label>
+                    <p class="splive-field-help"><?php esc_html_e( 'Shows real recent orders as animated popups across your store.', 'social-proof-live' ); ?></p>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Position', 'social-proof-live' ); ?></label>
+                    <select name="notif_position" class="splive-input splive-select">
+                        <option value="bottom-left" <?php selected( $settings['notif_position'], 'bottom-left' ); ?>><?php esc_html_e( 'Bottom Left', 'social-proof-live' ); ?></option>
+                        <option value="bottom-right" <?php selected( $settings['notif_position'], 'bottom-right' ); ?>><?php esc_html_e( 'Bottom Right', 'social-proof-live' ); ?></option>
+                        <option value="top-left" <?php selected( $settings['notif_position'], 'top-left' ); ?>><?php esc_html_e( 'Top Left', 'social-proof-live' ); ?></option>
+                        <option value="top-right" <?php selected( $settings['notif_position'], 'top-right' ); ?>><?php esc_html_e( 'Top Right', 'social-proof-live' ); ?></option>
+                    </select>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Look-back Window (hours)', 'social-proof-live' ); ?></label>
+                    <input type="number" name="notif_lookback_hours" class="splive-input" value="<?php echo esc_attr( $settings['notif_lookback_hours'] ); ?>" min="1" max="8760" style="max-width:120px;">
+                    <p class="splive-field-help"><?php esc_html_e( 'Only show orders from within this many hours. 168 = last 7 days.', 'social-proof-live' ); ?></p>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Max Events', 'social-proof-live' ); ?></label>
+                    <input type="number" name="notif_max_events" class="splive-input" value="<?php echo esc_attr( $settings['notif_max_events'] ); ?>" min="1" max="100" style="max-width:120px;">
+                </div>
+
+                <div class="splive-field splive-flex splive-gap-16">
+                    <div>
+                        <label class="splive-field-label"><?php esc_html_e( 'Display Time (s)', 'social-proof-live' ); ?></label>
+                        <input type="number" name="notif_display_time" class="splive-input" value="<?php echo esc_attr( $settings['notif_display_time'] ); ?>" min="2" max="60" style="max-width:100px;">
+                    </div>
+                    <div>
+                        <label class="splive-field-label"><?php esc_html_e( 'Gap (s)', 'social-proof-live' ); ?></label>
+                        <input type="number" name="notif_gap" class="splive-input" value="<?php echo esc_attr( $settings['notif_gap'] ); ?>" min="2" max="120" style="max-width:100px;">
+                    </div>
+                    <div>
+                        <label class="splive-field-label"><?php esc_html_e( 'Initial Delay (s)', 'social-proof-live' ); ?></label>
+                        <input type="number" name="notif_initial_delay" class="splive-input" value="<?php echo esc_attr( $settings['notif_initial_delay'] ); ?>" min="0" max="60" style="max-width:100px;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="splive-card">
+                <h3 class="splive-card-title splive-mb-24"><?php esc_html_e( 'Popup Options', 'social-proof-live' ); ?></h3>
+
+                <div class="splive-field">
+                    <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="notif_loop" <?php checked( $settings['notif_loop'] ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Loop through events continuously', 'social-proof-live' ); ?></span></label>
+                </div>
+                <div class="splive-field">
+                    <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="notif_show_image" <?php checked( $settings['notif_show_image'] ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Show product image', 'social-proof-live' ); ?></span></label>
+                </div>
+                <div class="splive-field">
+                    <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="notif_show_location" <?php checked( $settings['notif_show_location'] ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Show buyer city / country', 'social-proof-live' ); ?></span></label>
+                </div>
+                <div class="splive-field">
+                    <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="notif_show_time" <?php checked( $settings['notif_show_time'] ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Show time ago + verified badge', 'social-proof-live' ); ?></span></label>
+                </div>
+                <div class="splive-field">
+                    <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="notif_anonymize" <?php checked( $settings['notif_anonymize'] ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Anonymize names (show "Someone")', 'social-proof-live' ); ?></span></label>
+                    <p class="splive-field-help"><?php esc_html_e( 'Maximum privacy — hides customer first names.', 'social-proof-live' ); ?></p>
+                </div>
+                <div class="splive-field">
+                    <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="notif_click_to_product" <?php checked( $settings['notif_click_to_product'] ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Click popup opens the product', 'social-proof-live' ); ?></span></label>
+                </div>
+                <div class="splive-field">
+                    <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="notif_hide_on_mobile" <?php checked( $settings['notif_hide_on_mobile'] ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Hide popups on mobile', 'social-proof-live' ); ?></span></label>
+                </div>
+                <div class="splive-field">
+                    <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="notif_sound" <?php checked( $settings['notif_sound'] ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Play subtle sound on popup', 'social-proof-live' ); ?></span></label>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Headline (with location)', 'social-proof-live' ); ?></label>
+                    <input type="text" name="text_notif" class="splive-input" value="<?php echo esc_attr( $settings['text_notif'] ); ?>" style="max-width:100%;">
+                    <p class="splive-field-help"><?php esc_html_e( 'Use {name} and {location}.', 'social-proof-live' ); ?></p>
+                </div>
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Headline (no location)', 'social-proof-live' ); ?></label>
+                    <input type="text" name="text_notif_no_location" class="splive-input" value="<?php echo esc_attr( $settings['text_notif_no_location'] ); ?>" style="max-width:100%;">
+                </div>
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Action Verb', 'social-proof-live' ); ?></label>
+                    <input type="text" name="text_notif_verb" class="splive-input" value="<?php echo esc_attr( $settings['text_notif_verb'] ); ?>" style="max-width:200px;">
+                    <p class="splive-field-help"><?php esc_html_e( 'e.g. "just bought" — shown before the product name.', 'social-proof-live' ); ?></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badge & Rules Tab -->
+        <div class="splive-tab-panel" data-panel="rules">
+            <div class="splive-card">
+                <h3 class="splive-card-title splive-mb-24">🟢 <?php esc_html_e( 'Live Visitor Badge', 'social-proof-live' ); ?></h3>
+
+                <div class="splive-field">
+                    <label class="splive-toggle">
+                        <input type="checkbox" class="splive-toggle-input" name="enable_visitor_badge" <?php checked( $settings['enable_visitor_badge'] ); ?>>
+                        <span class="splive-toggle-track"></span>
+                        <span class="splive-toggle-label"><?php esc_html_e( 'Show floating "X people browsing" badge', 'social-proof-live' ); ?></span>
+                    </label>
+                    <p class="splive-field-help"><?php esc_html_e( 'A site-wide live visitor counter based on real active sessions.', 'social-proof-live' ); ?></p>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Badge Position', 'social-proof-live' ); ?></label>
+                    <select name="badge_position" class="splive-input splive-select">
+                        <option value="bottom-right" <?php selected( $settings['badge_position'], 'bottom-right' ); ?>><?php esc_html_e( 'Bottom Right', 'social-proof-live' ); ?></option>
+                        <option value="bottom-left" <?php selected( $settings['badge_position'], 'bottom-left' ); ?>><?php esc_html_e( 'Bottom Left', 'social-proof-live' ); ?></option>
+                        <option value="top-right" <?php selected( $settings['badge_position'], 'top-right' ); ?>><?php esc_html_e( 'Top Right', 'social-proof-live' ); ?></option>
+                        <option value="top-left" <?php selected( $settings['badge_position'], 'top-left' ); ?>><?php esc_html_e( 'Top Left', 'social-proof-live' ); ?></option>
+                    </select>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Minimum Visitors', 'social-proof-live' ); ?></label>
+                    <input type="number" name="badge_min_visitors" class="splive-input" value="<?php echo esc_attr( $settings['badge_min_visitors'] ); ?>" min="1" max="1000" style="max-width:120px;">
+                    <p class="splive-field-help"><?php esc_html_e( "Badge stays hidden until at least this many people are online.", 'social-proof-live' ); ?></p>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Badge Message', 'social-proof-live' ); ?></label>
+                    <input type="text" name="text_badge" class="splive-input" value="<?php echo esc_attr( $settings['text_badge'] ); ?>" style="max-width:100%;">
+                    <p class="splive-field-help"><?php esc_html_e( 'Use {count} for the live number.', 'social-proof-live' ); ?></p>
+                </div>
+            </div>
+
+            <div class="splive-card">
+                <h3 class="splive-card-title splive-mb-24">🎯 <?php esc_html_e( 'Display Rules', 'social-proof-live' ); ?></h3>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Show on Devices', 'social-proof-live' ); ?></label>
+                    <div class="splive-flex splive-gap-16">
+                        <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="rules_devices[]" value="desktop" <?php checked( in_array( 'desktop', (array) $settings['rules_devices'], true ) ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Desktop', 'social-proof-live' ); ?></span></label>
+                        <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="rules_devices[]" value="tablet" <?php checked( in_array( 'tablet', (array) $settings['rules_devices'], true ) ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Tablet', 'social-proof-live' ); ?></span></label>
+                        <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="rules_devices[]" value="mobile" <?php checked( in_array( 'mobile', (array) $settings['rules_devices'], true ) ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Mobile', 'social-proof-live' ); ?></span></label>
+                    </div>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-field-label"><?php esc_html_e( 'Active Days', 'social-proof-live' ); ?></label>
+                    <div class="splive-flex splive-gap-8" style="flex-wrap:wrap;">
+                        <?php
+                        $days = array( 'mon' => 'Mon', 'tue' => 'Tue', 'wed' => 'Wed', 'thu' => 'Thu', 'fri' => 'Fri', 'sat' => 'Sat', 'sun' => 'Sun' );
+                        foreach ( $days as $dk => $dl ) :
+                            ?>
+                            <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="rules_days[]" value="<?php echo esc_attr( $dk ); ?>" <?php checked( in_array( $dk, (array) $settings['rules_days'], true ) ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php echo esc_html( $dl ); ?></span></label>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <div class="splive-field splive-flex splive-gap-16">
+                    <div>
+                        <label class="splive-field-label"><?php esc_html_e( 'Active From (hour)', 'social-proof-live' ); ?></label>
+                        <input type="number" name="rules_hour_start" class="splive-input" value="<?php echo esc_attr( $settings['rules_hour_start'] ); ?>" min="0" max="23" style="max-width:100px;">
+                    </div>
+                    <div>
+                        <label class="splive-field-label"><?php esc_html_e( 'Active To (hour)', 'social-proof-live' ); ?></label>
+                        <input type="number" name="rules_hour_end" class="splive-input" value="<?php echo esc_attr( $settings['rules_hour_end'] ); ?>" min="0" max="23" style="max-width:100px;">
+                    </div>
+                </div>
+
+                <div class="splive-field">
+                    <label class="splive-toggle"><input type="checkbox" class="splive-toggle-input" name="rules_logged_in_only" <?php checked( $settings['rules_logged_in_only'] ); ?>><span class="splive-toggle-track"></span><span class="splive-toggle-label"><?php esc_html_e( 'Only show to logged-in users', 'social-proof-live' ); ?></span></label>
+                </div>
+            </div>
+        </div>
 
         <!-- Appearance Tab -->
         <div class="splive-tab-panel" data-panel="appearance">

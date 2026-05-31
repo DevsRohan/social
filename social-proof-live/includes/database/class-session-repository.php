@@ -128,10 +128,11 @@ class Session_Repository {
         $table     = $this->table();
         $threshold = gmdate( 'Y-m-d H:i:s', time() - $timeout );
 
+        // Count distinct visitors (a visitor may have rows for several pages).
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
         $count = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$table}
+                "SELECT COUNT(DISTINCT session_hash) FROM {$table}
                 WHERE is_active = 1
                 AND last_seen >= %s",
                 $threshold

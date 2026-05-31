@@ -191,6 +191,11 @@ if ( $stats_exists ) {
     // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $stats_rows = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$splive_stats_table}" );
     splive_check( 'Stats table readable', 'INFO', $stats_rows . ' rows' );
+
+    // Verify the v1.1.0 impressions column exists (conversion tracking).
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $has_impressions = $wpdb->get_var( "SHOW COLUMNS FROM {$splive_stats_table} LIKE 'impressions'" );
+    splive_check( 'Stats "impressions" column (v1.1.0)', $has_impressions ? 'PASS' : 'FAIL', $has_impressions ? 'present' : 'missing — re-activate plugin to migrate' );
 }
 
 // ---------------------------------------------------------------------------
@@ -252,6 +257,8 @@ $routes        = rest_get_server()->get_routes();
 $expected_routes = array(
     '/splive/v1/heartbeat',
     '/splive/v1/leave',
+    '/splive/v1/impression',
+    '/splive/v1/notifications',
     '/splive/v1/admin/overview',
     '/splive/v1/admin/settings',
 );
@@ -285,7 +292,12 @@ $classes = array(
     'SocialProofLive\\Core\\Cart_Tracker',
     'SocialProofLive\\Core\\Purchase_Tracker',
     'SocialProofLive\\Core\\Data_Aggregator',
+    'SocialProofLive\\Core\\Conversion_Tracker',
+    'SocialProofLive\\Core\\Display_Rules',
+    'SocialProofLive\\Notifications\\Sales_Notifications',
     'SocialProofLive\\Api\\Heartbeat_Endpoint',
+    'SocialProofLive\\Api\\Notifications_Endpoint',
+    'SocialProofLive\\Api\\Impression_Endpoint',
     'SocialProofLive\\Cache\\Cache_Manager',
 );
 

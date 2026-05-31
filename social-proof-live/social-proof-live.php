@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name: Social Proof LIVE
- * Plugin URI: https://socialprooflive.com
- * Description: Show REAL-TIME visitor activity on WooCommerce product pages — live viewer counts, cart activity, and recent purchases. 100% real data, zero fakes.
- * Version: 1.0.0
+ * Plugin URI: https://devsarun.io/
+ * Description: Show REAL-TIME visitor activity on WooCommerce product pages — live viewer counts, cart activity, recent purchases, FOMO sales popups, stock urgency, sale countdowns, and a site-wide live visitor badge. 100% real data, zero fakes.
+ * Version: 1.1.0
  * Requires at least: 5.8
  * Requires PHP: 7.4
- * Author: Social Proof LIVE
- * Author URI: https://socialprooflive.com
+ * Author: DevsArun
+ * Author URI: https://devsarun.io/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: social-proof-live
@@ -23,8 +23,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Plugin constants.
  */
-define( 'SPLIVE_VERSION', '1.0.0' );
-define( 'SPLIVE_DB_VERSION', '1.0.0' );
+define( 'SPLIVE_VERSION', '1.1.0' );
+define( 'SPLIVE_DB_VERSION', '1.1.0' );
 define( 'SPLIVE_PLUGIN_FILE', __FILE__ );
 define( 'SPLIVE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SPLIVE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

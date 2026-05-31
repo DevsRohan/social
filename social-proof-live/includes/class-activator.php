@@ -87,6 +87,7 @@ class Activator {
             max_viewers INT(11) UNSIGNED NOT NULL DEFAULT 0,
             avg_viewers DECIMAL(8,1) NOT NULL DEFAULT 0.0,
             total_sessions INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            impressions INT(11) UNSIGNED NOT NULL DEFAULT 0,
             cart_additions INT(11) UNSIGNED NOT NULL DEFAULT 0,
             purchases INT(11) UNSIGNED NOT NULL DEFAULT 0,
             created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

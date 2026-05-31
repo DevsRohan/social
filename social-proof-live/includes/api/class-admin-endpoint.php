@@ -126,13 +126,24 @@ class Admin_Endpoint extends Rest_Controller {
         }
 
         $stats_repo = new Stats_Repository();
+        $summary    = $stats_repo->get_summary( $start_date, $end_date );
+
+        // Real conversion rate: purchases / impressions (widget exposure).
+        $impressions = isset( $summary['total_impressions'] ) ? (int) $summary['total_impressions'] : 0;
+        $purchases   = isset( $summary['total_purchases'] ) ? (int) $summary['total_purchases'] : 0;
+        $cart_adds   = isset( $summary['total_cart_additions'] ) ? (int) $summary['total_cart_additions'] : 0;
+
+        $conversion_rate = $impressions > 0 ? round( ( $purchases / $impressions ) * 100, 2 ) : 0;
+        $cart_rate       = $impressions > 0 ? round( ( $cart_adds / $impressions ) * 100, 2 ) : 0;
 
         $response = array(
-            'summary'      => $stats_repo->get_summary( $start_date, $end_date ),
-            'hourly_data'  => $stats_repo->get_stats_range( 0, $start_date, $end_date ),
-            'top_products' => $stats_repo->get_top_products_by_sessions( 20, $start_date, $end_date ),
-            'start_date'   => $start_date,
-            'end_date'     => $end_date,
+            'summary'         => $summary,
+            'conversion_rate' => $conversion_rate,
+            'cart_rate'       => $cart_rate,
+            'hourly_data'     => $stats_repo->get_stats_range( 0, $start_date, $end_date ),
+            'top_products'    => $stats_repo->get_top_products_by_sessions( 20, $start_date, $end_date ),
+            'start_date'      => $start_date,
+            'end_date'        => $end_date,
         );
 
         return $this->success( $response );
@@ -175,7 +186,15 @@ class Admin_Endpoint extends Rest_Controller {
             } elseif ( is_float( $default ) ) {
                 $sanitized[ $key ] = (float) $value;
             } elseif ( is_array( $default ) ) {
-                $sanitized[ $key ] = is_array( $value ) ? array_map( 'absint', $value ) : array();
+                if ( ! is_array( $value ) ) {
+                    $sanitized[ $key ] = array();
+                } elseif ( in_array( $key, array( 'excluded_products', 'excluded_categories' ), true ) ) {
+                    // Integer arrays.
+                    $sanitized[ $key ] = array_values( array_filter( array_map( 'absint', $value ) ) );
+                } else {
+                    // String arrays (rules_devices, rules_days).
+                    $sanitized[ $key ] = array_values( array_map( 'sanitize_key', $value ) );
+                }
             } else {
                 $sanitized[ $key ] = sanitize_text_field( $value );
             }
@@ -190,6 +209,17 @@ class Admin_Endpoint extends Rest_Controller {
         $sanitized['cache_ttl']          = max( 1, min( 60, $sanitized['cache_ttl'] ) );
         $sanitized['stats_retention']    = max( 7, min( 365, $sanitized['stats_retention'] ) );
         $sanitized['border_radius']      = max( 0, min( 30, $sanitized['border_radius'] ) );
+
+        // Premium ranges.
+        $sanitized['stock_threshold']     = max( 1, min( 1000, $sanitized['stock_threshold'] ) );
+        $sanitized['notif_lookback_hours'] = max( 1, min( 8760, $sanitized['notif_lookback_hours'] ) );
+        $sanitized['notif_max_events']    = max( 1, min( 100, $sanitized['notif_max_events'] ) );
+        $sanitized['notif_display_time']  = max( 2, min( 60, $sanitized['notif_display_time'] ) );
+        $sanitized['notif_gap']           = max( 2, min( 120, $sanitized['notif_gap'] ) );
+        $sanitized['notif_initial_delay'] = max( 0, min( 60, $sanitized['notif_initial_delay'] ) );
+        $sanitized['badge_min_visitors']  = max( 1, min( 1000, $sanitized['badge_min_visitors'] ) );
+        $sanitized['rules_hour_start']    = max( 0, min( 23, $sanitized['rules_hour_start'] ) );
+        $sanitized['rules_hour_end']      = max( 0, min( 23, $sanitized['rules_hour_end'] ) );
 
         // Validate color.
         if ( ! preg_match( '/^#[a-fA-F0-9]{6}$/', $sanitized['accent_color'] ) ) {
@@ -221,6 +251,28 @@ class Admin_Endpoint extends Rest_Controller {
         }
         if ( ! in_array( $sanitized['font_size'], $valid_fonts, true ) ) {
             $sanitized['font_size'] = 'inherit';
+        }
+
+        // Premium select validation (popup + badge positions).
+        $valid_corner = array( 'bottom-left', 'bottom-right', 'top-left', 'top-right' );
+        if ( ! in_array( $sanitized['notif_position'], $valid_corner, true ) ) {
+            $sanitized['notif_position'] = 'bottom-left';
+        }
+        if ( ! in_array( $sanitized['badge_position'], $valid_corner, true ) ) {
+            $sanitized['badge_position'] = 'bottom-right';
+        }
+
+        // Ensure device/day rule arrays only contain valid values.
+        $valid_devices = array( 'desktop', 'tablet', 'mobile' );
+        $sanitized['rules_devices'] = array_values( array_intersect( $sanitized['rules_devices'], $valid_devices ) );
+        if ( empty( $sanitized['rules_devices'] ) ) {
+            $sanitized['rules_devices'] = $valid_devices;
+        }
+
+        $valid_days = array( 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' );
+        $sanitized['rules_days'] = array_values( array_intersect( $sanitized['rules_days'], $valid_days ) );
+        if ( empty( $sanitized['rules_days'] ) ) {
+            $sanitized['rules_days'] = $valid_days;
         }
 
         update_option( 'splive_settings', $sanitized );

@@ -382,3 +382,29 @@
         display: none !important;
     }
 }
+
+
+/* ==========================================================================
+   Stock Urgency + Sale Countdown Lines
+   ========================================================================== */
+
+.splive-stock .splive-text strong {
+    color: var(--splive-accent);
+}
+
+.splive-countdown .splive-text strong {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    color: var(--splive-accent);
+    letter-spacing: 0.02em;
+}
+
+.splive-stock {
+    font-weight: 500;
+}
+
+.splive-theme-bold .splive-stock,
+.splive-theme-bold .splive-countdown {
+    color: var(--splive-accent);
+    font-weight: 600;
+}

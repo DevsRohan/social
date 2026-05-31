@@ -39,6 +39,11 @@ defined( 'ABSPATH' ) || exit;
             <div class="splive-stat-value splive-analytics-purchases">—</div>
             <div class="splive-stat-label"><?php esc_html_e( 'Purchases Tracked', 'social-proof-live' ); ?></div>
         </div>
+        <div class="splive-stat-card">
+            <div class="splive-stat-icon">🎯</div>
+            <div class="splive-stat-value splive-analytics-conversion">—</div>
+            <div class="splive-stat-label"><?php esc_html_e( 'Conversion Rate', 'social-proof-live' ); ?></div>
+        </div>
     </div>
 
     <!-- Chart -->

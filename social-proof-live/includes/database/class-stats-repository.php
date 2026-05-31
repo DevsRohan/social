@@ -66,6 +66,47 @@ class Stats_Repository {
     }
 
     /**
+     * Increment a single metric counter for a product in the current hour.
+     *
+     * Used for real conversion tracking (impressions, cart_additions, purchases).
+     *
+     * @param int    $product_id Product ID.
+     * @param string $metric     One of: impressions, cart_additions, purchases.
+     * @param int    $amount     Amount to increment by.
+     * @return bool True on success.
+     */
+    public function increment_metric( $product_id, $metric, $amount = 1 ) {
+        $allowed = array( 'impressions', 'cart_additions', 'purchases' );
+        if ( ! in_array( $metric, $allowed, true ) ) {
+            return false;
+        }
+
+        global $wpdb;
+
+        $table  = $this->table();
+        $date   = gmdate( 'Y-m-d' );
+        $hour   = absint( gmdate( 'G' ) );
+        $amount = absint( $amount );
+
+        // The metric column name is validated against a whitelist above, so it is
+        // safe to interpolate directly into the query.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $result = $wpdb->query(
+            $wpdb->prepare(
+                "INSERT INTO {$table} (product_id, stat_date, stat_hour, {$metric})
+                VALUES (%d, %s, %d, %d)
+                ON DUPLICATE KEY UPDATE {$metric} = {$metric} + VALUES({$metric})",
+                $product_id,
+                $date,
+                $hour,
+                $amount
+            )
+        );
+
+        return false !== $result;
+    }
+
+    /**
      * Get stats for a product within a date range.
      *
      * @param int    $product_id Product ID. 0 for all products.
@@ -176,6 +217,7 @@ class Stats_Repository {
                     MAX(max_viewers) as peak_viewers,
                     AVG(avg_viewers) as avg_viewers,
                     SUM(total_sessions) as total_sessions,
+                    SUM(impressions) as total_impressions,
                     SUM(cart_additions) as total_cart_additions,
                     SUM(purchases) as total_purchases
                 FROM {$table}
@@ -190,6 +232,7 @@ class Stats_Repository {
             'peak_viewers'         => 0,
             'avg_viewers'          => 0,
             'total_sessions'       => 0,
+            'total_impressions'    => 0,
             'total_cart_additions'  => 0,
             'total_purchases'      => 0,
         );

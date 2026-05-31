@@ -1,0 +1,228 @@
+/**
+ * Social Proof LIVE — Notifications & Visitor Badge Styles
+ *
+ * FOMO sales popups + floating live-visitor badge. Premium SaaS styling
+ * with glassmorphism, smooth animations, dark mode, and responsive layout.
+ *
+ * @package SocialProofLive
+ */
+
+:root {
+    --splive-accent: #FF6B35;
+    --splive-accent-light: rgba(255, 107, 53, 0.1);
+    --splive-np-bg: #ffffff;
+    --splive-np-text: #0f172a;
+    --splive-np-text-sub: #64748b;
+    --splive-np-border: rgba(15, 23, 42, 0.08);
+    --splive-np-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+}
+
+/* ==========================================================================
+   FOMO Sales Popup
+   ========================================================================== */
+
+.splive-popup {
+    position: fixed;
+    z-index: 99990;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 330px;
+    max-width: calc(100vw - 32px);
+    padding: 12px 14px;
+    background: var(--splive-np-bg);
+    border: 1px solid var(--splive-np-border);
+    border-radius: 14px;
+    box-shadow: var(--splive-np-shadow);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+    transition: opacity 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+}
+
+.splive-popup.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.splive-popup.splive-clickable {
+    cursor: pointer;
+}
+
+
+.splive-popup-img {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f1f5f9;
+}
+
+.splive-popup-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.splive-popup-headline {
+    font-size: 13px;
+    color: var(--splive-np-text);
+    line-height: 1.35;
+}
+
+.splive-popup-headline strong {
+    font-weight: 600;
+}
+
+.splive-popup-product {
+    font-size: 12px;
+    color: var(--splive-np-text-sub);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.splive-popup-meta {
+    font-size: 11px;
+    color: var(--splive-np-text-sub);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.splive-popup-verified {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.splive-popup-close {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.splive-popup-close:hover {
+    color: var(--splive-np-text);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+
+/* ==========================================================================
+   Live Visitor Badge
+   ========================================================================== */
+
+.splive-badge-live {
+    position: fixed;
+    z-index: 99989;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    background: var(--splive-np-bg);
+    border: 1px solid var(--splive-np-border);
+    border-radius: 999px;
+    box-shadow: var(--splive-np-shadow);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px;
+    color: var(--splive-np-text);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.splive-badge-live.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.splive-badge-text strong {
+    font-weight: 700;
+    color: var(--splive-accent);
+}
+
+.splive-badge-dot {
+    display: inline-flex;
+    animation: splive-badge-pulse 2s infinite;
+}
+
+@keyframes splive-badge-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+}
+
+/* ==========================================================================
+   Positioning helpers
+   ========================================================================== */
+
+.splive-pos-bottom-left { bottom: 20px; left: 20px; }
+.splive-pos-bottom-right { bottom: 20px; right: 20px; }
+.splive-pos-top-left { top: 20px; left: 20px; }
+.splive-pos-top-right { top: 20px; right: 20px; }
+
+
+/* ==========================================================================
+   Dark mode
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --splive-np-bg: #1e293b;
+        --splive-np-text: #f1f5f9;
+        --splive-np-text-sub: #94a3b8;
+        --splive-np-border: rgba(255, 255, 255, 0.1);
+        --splive-np-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .splive-popup-img {
+        background-color: #334155;
+    }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 480px) {
+    .splive-popup {
+        width: calc(100vw - 24px);
+        left: 12px !important;
+        right: 12px !important;
+    }
+
+    .splive-pos-bottom-left,
+    .splive-pos-bottom-right {
+        bottom: 12px;
+    }
+
+    .splive-badge-live {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+}
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .splive-popup,
+    .splive-badge-live,
+    .splive-badge-dot {
+        transition: none !important;
+        animation: none !important;
+    }
+}

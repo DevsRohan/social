@@ -197,6 +197,22 @@ class Widget_Renderer {
             $html .= '</div>';
         }
 
+        // Stock urgency line.
+        if ( ! empty( $this->settings['enable_stock'] ) ) {
+            $html .= '<div class="splive-line splive-stock" data-type="stock" style="display:none;">';
+            $html .= '<span class="splive-icon">' . esc_html( $this->settings['icon_stock'] ) . '</span>';
+            $html .= '<span class="splive-text"></span>';
+            $html .= '</div>';
+        }
+
+        // Sale countdown line.
+        if ( ! empty( $this->settings['enable_countdown'] ) ) {
+            $html .= '<div class="splive-line splive-countdown" data-type="countdown" style="display:none;">';
+            $html .= '<span class="splive-icon">' . esc_html( $this->settings['icon_countdown'] ) . '</span>';
+            $html .= '<span class="splive-text"></span>';
+            $html .= '</div>';
+        }
+
         $html .= '</div>';
 
         /**

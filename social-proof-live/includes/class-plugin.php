@@ -79,6 +79,10 @@ class Plugin {
     private function init_core() {
         $session_manager = new Core\Session_Manager( $this->settings );
         $session_manager->init();
+
+        // Real conversion tracking (runs in admin + frontend so order hooks fire).
+        $conversion_tracker = new Core\Conversion_Tracker( $this->settings );
+        $conversion_tracker->init();
     }
 
     /**
@@ -99,6 +103,12 @@ class Plugin {
 
             $admin_api = new Api\Admin_Endpoint( $this->settings );
             $admin_api->register_routes();
+
+            $notifications = new Api\Notifications_Endpoint( $this->settings );
+            $notifications->register_routes();
+
+            $impression = new Api\Impression_Endpoint( $this->settings );
+            $impression->register_routes();
         });
     }
 
@@ -210,6 +220,54 @@ class Plugin {
             'stats_retention'        => 30,
             'debug_mode'             => false,
             'disable_on_mobile'      => false,
+
+            // --- PREMIUM: Stock Urgency ---
+            'enable_stock'           => true,
+            'stock_threshold'        => 10,
+            'text_stock'             => 'Hurry! Only {count} left in stock',
+            'icon_stock'             => '📦',
+
+            // --- PREMIUM: Sale Countdown ---
+            'enable_countdown'       => true,
+            'text_countdown'         => 'Sale ends in {time}',
+            'icon_countdown'         => '⏳',
+
+            // --- PREMIUM: Recent Sales FOMO Notifications ---
+            'enable_notifications'   => true,
+            'notif_position'         => 'bottom-left',
+            'notif_lookback_hours'   => 168,
+            'notif_max_events'       => 12,
+            'notif_display_time'     => 6,
+            'notif_gap'              => 8,
+            'notif_initial_delay'    => 4,
+            'notif_loop'             => true,
+            'notif_show_image'       => true,
+            'notif_show_location'    => true,
+            'notif_show_time'        => true,
+            'notif_anonymize'        => false,
+            'notif_click_to_product' => true,
+            'notif_hide_on_mobile'   => false,
+            'notif_sound'            => false,
+            'text_notif'             => '{name} from {location} purchased',
+            'text_notif_no_location' => '{name} purchased',
+            'text_notif_verb'        => 'just bought',
+
+            // --- PREMIUM: Site-wide Live Visitor Counter ---
+            'enable_visitor_badge'   => true,
+            'badge_position'         => 'bottom-right',
+            'badge_min_visitors'     => 3,
+            'text_badge'             => '{count} people are browsing right now',
+            'icon_badge'             => '🟢',
+
+            // --- PREMIUM: Display Rules ---
+            'rules_devices'          => array( 'desktop', 'tablet', 'mobile' ),
+            'rules_days'             => array( 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ),
+            'rules_hour_start'       => 0,
+            'rules_hour_end'         => 23,
+            'rules_logged_in_only'   => false,
+
+            // --- PREMIUM: Conversion Tracking ---
+            'enable_conversion_tracking' => true,
         );
     }
 }

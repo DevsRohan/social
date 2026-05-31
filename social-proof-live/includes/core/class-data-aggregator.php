@@ -45,6 +45,8 @@ class Data_Aggregator {
             'viewers'    => null,
             'cart'       => null,
             'purchase'   => null,
+            'stock'      => null,
+            'countdown'  => null,
             'show'       => false,
         );
 
@@ -85,6 +87,40 @@ class Data_Aggregator {
             }
         }
 
+        // Stock urgency + sale countdown (real WooCommerce data).
+        if ( function_exists( 'wc_get_product' ) ) {
+            $product = wc_get_product( $product_id );
+
+            if ( $product ) {
+                // Low stock urgency.
+                if ( ! empty( $this->settings['enable_stock'] ) && $product->managing_stock() ) {
+                    $stock_qty = $product->get_stock_quantity();
+                    $threshold = isset( $this->settings['stock_threshold'] ) ? (int) $this->settings['stock_threshold'] : 10;
+
+                    if ( null !== $stock_qty && $stock_qty > 0 && $stock_qty <= $threshold ) {
+                        $data['stock'] = (int) $stock_qty;
+                        $data['show']  = true;
+                    }
+                }
+
+                // Sale countdown — only when a sale end date is set in the future.
+                if ( ! empty( $this->settings['enable_countdown'] ) && $product->is_on_sale() ) {
+                    $sale_end = $product->get_date_on_sale_to();
+                    if ( $sale_end ) {
+                        $end_ts  = $sale_end->getTimestamp();
+                        $seconds = $end_ts - time();
+                        if ( $seconds > 0 ) {
+                            $data['countdown'] = array(
+                                'seconds'   => $seconds,
+                                'timestamp' => $end_ts,
+                            );
+                            $data['show'] = true;
+                        }
+                    }
+                }
+            }
+        }
+
         /**
          * Filter the aggregated product data.
          *
@@ -116,6 +152,16 @@ class Data_Aggregator {
         } else {
             $response['last_purchase']         = null;
             $response['last_purchase_seconds'] = null;
+        }
+
+        // Stock urgency.
+        $response['stock'] = isset( $data['stock'] ) ? $data['stock'] : null;
+
+        // Sale countdown — send remaining seconds; client ticks it down locally.
+        if ( ! empty( $data['countdown'] ) ) {
+            $response['countdown_seconds'] = $data['countdown']['seconds'];
+        } else {
+            $response['countdown_seconds'] = null;
         }
 
         return $response;

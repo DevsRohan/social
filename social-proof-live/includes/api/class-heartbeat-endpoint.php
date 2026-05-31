@@ -34,7 +34,7 @@ class Heartbeat_Endpoint extends Rest_Controller {
             'args'                => array(
                 'product_id'   => array(
                     'required'          => true,
-                    'validate_callback' => array( $this, 'validate_product_id' ),
+                    'validate_callback' => array( $this, 'validate_global_or_product_id' ),
                     'sanitize_callback' => array( $this, 'sanitize_product_id' ),
                 ),
                 'session_hash' => array(
@@ -58,9 +58,11 @@ class Heartbeat_Endpoint extends Rest_Controller {
         $ip         = Session_Manager::get_visitor_ip();
         $user_agent = Session_Manager::get_visitor_user_agent();
 
-        // Bot detection.
+        // Bot detection — never count bots toward live numbers.
         if ( empty( $this->settings['count_bots'] ) && Session_Manager::is_bot( $user_agent ) ) {
-            // Still return data but don't count this visitor.
+            if ( 0 === (int) $product_id ) {
+                return $this->success( array( 'status' => 'bot' ) );
+            }
             $aggregator = new Data_Aggregator( $this->settings );
             $data       = $aggregator->get_product_data( $product_id );
             return $this->success( $aggregator->format_response( $data ) );
@@ -75,8 +77,26 @@ class Heartbeat_Endpoint extends Rest_Controller {
             $session_hash = $server_hash;
         }
 
-        // Rate limiting.
-        $session_mgr = new Session_Manager( $this->settings );
+        $session_mgr  = new Session_Manager( $this->settings );
+        $session_repo = new Session_Repository();
+
+        // Global (site-wide) heartbeat — lightweight, just keep the visitor counted.
+        if ( 0 === (int) $product_id ) {
+            if ( $session_mgr->check_rate_limit( $session_hash, 0 ) ) {
+                $session_repo->upsert_session(
+                    $session_hash,
+                    0,
+                    Session_Manager::hash_ip( $ip ),
+                    Session_Manager::hash_user_agent( $user_agent )
+                );
+            }
+            return $this->success( array(
+                'status'       => 'ok',
+                'session_hash' => $session_hash,
+            ) );
+        }
+
+        // Rate limiting for product heartbeats.
         if ( ! $session_mgr->check_rate_limit( $session_hash, $product_id ) ) {
             // Return cached data without updating session.
             $aggregator = new Data_Aggregator( $this->settings );
@@ -90,7 +110,6 @@ class Heartbeat_Endpoint extends Rest_Controller {
         $ip_hash = Session_Manager::hash_ip( $ip );
         $ua_hash = Session_Manager::hash_user_agent( $user_agent );
 
-        $session_repo = new Session_Repository();
         $session_repo->upsert_session( $session_hash, $product_id, $ip_hash, $ua_hash );
 
         // Get aggregated data.
@@ -102,5 +121,15 @@ class Heartbeat_Endpoint extends Rest_Controller {
         $response['session_hash'] = $session_hash;
 
         return $this->success( $response );
+    }
+
+    /**
+     * Validate product ID allowing 0 for global/site-wide heartbeats.
+     *
+     * @param mixed $value Value to validate.
+     * @return bool
+     */
+    public function validate_global_or_product_id( $value ) {
+        return is_numeric( $value ) && (int) $value >= 0;
     }
 }

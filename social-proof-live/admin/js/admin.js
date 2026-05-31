@@ -268,9 +268,19 @@
         var form = document.querySelector('.splive-settings-form');
         if (!form) return admin.settings;
 
-        // Toggles (booleans).
+        // Toggles (booleans) + checkbox arrays (name ending in []).
         form.querySelectorAll('.splive-toggle-input').forEach(function (el) {
-            settings[el.name] = el.checked;
+            if (/\[\]$/.test(el.name)) {
+                var key = el.name.replace(/\[\]$/, '');
+                if (!Array.isArray(settings[key])) {
+                    settings[key] = [];
+                }
+                if (el.checked) {
+                    settings[key].push(el.value);
+                }
+            } else {
+                settings[el.name] = el.checked;
+            }
         });
 
         // Text inputs.
@@ -328,15 +338,17 @@
         var startDate = new Date(Date.now() - days * 86400000).toISOString().split('T')[0];
 
         apiGet('admin/analytics?start_date=' + startDate + '&end_date=' + endDate).then(function (data) {
-            updateAnalyticsSummary(data.summary || {});
+            updateAnalyticsSummary(data);
             updateAnalyticsChart(data.hourly_data || []);
         });
     }
 
-    function updateAnalyticsSummary(summary) {
+    function updateAnalyticsSummary(data) {
+        var summary = data.summary || {};
         setElementText('.splive-analytics-peak', summary.peak_viewers || 0);
         setElementText('.splive-analytics-sessions', formatNumber(summary.total_sessions || 0));
         setElementText('.splive-analytics-purchases', summary.total_purchases || 0);
+        setElementText('.splive-analytics-conversion', (data.conversion_rate || 0) + '%');
     }
 
     function updateAnalyticsChart(data) {
